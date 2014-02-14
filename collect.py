@@ -37,33 +37,35 @@ def get_gating_changes():
     return changes
 
 
-def time_ago(dt):
-    delta = datetime.datetime.now() - dt
-    if delta.seconds / 60 / 60 > 1:
-        return '%d hours' % round(delta.seconds / 60. / 60.)
-    elif delta.seconds / 60 > 1:
-        return '%d minutes' % round(delta.seconds / 60.)
-    else:
-        return '%d seconds' % round(delta.seconds / 60.)
-
-
-@CACHE.cache_on_arguments()
 def get_gate_duration():
+    """Returns the number of seconds required to land a change."""
+    # look at the top change in the queue
     top_change = get_gating_changes()[0]
-    seconds = top_change['enqueue_time'] / 1000.
-    dt = datetime.datetime.fromtimestamp(seconds)
-    return time_ago(dt)
+
+    # calculate number of seconds since the change was enqueued
+    enqueued_timestamp = top_change['enqueue_time'] / 1000.
+    enqueued_dt = datetime.datetime.fromtimestamp(enqueued_timestamp)
+    seconds = (datetime.datetime.now() - enqueued_dt).seconds
+
+    # if the gate has an estimate for when all jobs are complete, add that
+    if top_change['remaining_time'] is not None:
+        seconds = seconds + top_change['remaining_time'] / 1000.
+
+    return seconds
 
 
-def list_gating_changes():
-    top_change = get_gating_changes()[0]
-    seconds = top_change['enqueue_time'] / 1000.
-    dt = datetime.datetime.fromtimestamp(seconds)
-    print('Gate duration: %s' % time_ago(dt))
+def human_readable_duration(seconds):
+    """Converts an integer in seconds to a human readable string."""
+    if seconds / 60 / 60 > 1:
+        return '%d hours' % round(seconds / 60. / 60.)
+    elif seconds / 60 > 1:
+        return '%d minutes' % round(seconds / 60.)
+    else:
+        return '%d seconds' % round(seconds / 60.)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
-    print('Gate duration: %s' % get_gate_duration())
+    print('Gate duration: %s' % human_readable_duration(get_gate_duration()))
