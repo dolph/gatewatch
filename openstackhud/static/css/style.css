@@ -1,0 +1,15 @@
+body {
+    color: #ddd;
+    background: black;
+}
+textarea {
+    resize: vertical;
+    height: 250px;
+    font-family: monospace;
+}
+div {
+    text-align: center;
+}
+h3 {
+    text-transform: uppercase;
+}

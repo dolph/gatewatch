@@ -1,0 +1,2 @@
+recursive-include pasteraw/templates *
+recursive-include pasteraw/static *
