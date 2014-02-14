@@ -25,7 +25,7 @@ def get_zuul_status():
 
 
 @CACHE.cache_on_arguments()
-def get_gating_changes():
+def list_gating_changes():
     status = get_zuul_status()
     gate = [x for x in status['pipelines'] if x['name'] == 'gate'].pop()
     queue = [x for x in gate['change_queues'] if PROJECT in x['name']].pop()
@@ -40,7 +40,7 @@ def get_gating_changes():
 def get_gate_duration():
     """Returns the number of seconds required to land a change."""
     # look at the top change in the queue
-    top_change = get_gating_changes()[0]
+    top_change = list_gating_changes()[0]
 
     # calculate number of seconds since the change was enqueued
     enqueued_timestamp = top_change['enqueue_time'] / 1000.
@@ -52,6 +52,32 @@ def get_gate_duration():
         seconds = seconds + top_change['remaining_time'] / 1000.
 
     return seconds
+
+
+def count_gating_changes():
+    """Returns the number of seconds required to land a change."""
+    # look at the top change in the queue
+    projects = [
+        PROJECT,
+        'openstack/python-keystoneclient',
+        'openstack/identity-api']
+
+    changes = []
+    gate_duration = get_gate_duration()
+    import time
+    now = time.time()
+    for change in list_gating_changes():
+        # skip changes to other projects
+        if change['project'] not in projects:
+            continue
+
+        # calculate the estimated time until a patch is merged
+        eta = int(round(change['enqueue_time'] / 1000. + gate_duration - now))
+        changes.append(dict(
+            url=change['url'],
+            eta=eta))
+
+    return changes
 
 
 def human_readable_duration(seconds):
@@ -90,3 +116,8 @@ if __name__ == '__main__':
 
     print(
         'Gate duration: %d %s' % human_readable_duration(get_gate_duration()))
+
+    print('Gating changes:')
+    for change in count_gating_changes():
+        value, units = human_readable_duration(change['eta'])
+        print('  %s: %d %s' % (change['url'], value, units))
