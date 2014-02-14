@@ -6,13 +6,24 @@ from openstackhud import app  # flake8: noqa
 from openstackhud import collect
 from openstackhud import decorators
 
+# should come from config
+PROJECTS = [
+    'openstack/keystone',
+    'openstack/python-keystoneclient']
+
 
 @app.route('/', methods=['GET'])
 @decorators.templated()
 def index():
     gate_duration = collect.get_gate_duration()
+
+    changes = collect.list_gating_changes_to_projects(PROJECTS)
+    for change in changes:
+        change['eta'] = collect.human_readable_duration(change['eta'])
+
     return dict(
-        gate_duration=collect.human_readable_duration(gate_duration))
+        gate_duration=collect.human_readable_duration(gate_duration),
+        changes=changes)
 
 
 @app.errorhandler(404)

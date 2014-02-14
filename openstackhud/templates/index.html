@@ -2,10 +2,18 @@
 {% block body %}
     <div class="row">
         <div class="span4"></div>
-        <div class="span4">
+        <div class="span4" style="text-align: center;">
             <h1>{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></h1>
             <h3>Queue Length</h3>
         </div>
         <div class="span4"></div>
+    </div>
+    <div class="row">
+        {% for change in changes %}
+            <div class="span2" style="text-align: right;"><h2>{{ change['eta'][0] }} <small>{{ change['eta'][1] }}</small></h2></div>
+            <div class="span10">
+                <h2><a href="{{ change['url'] }}">{{ change['url'] }}</a></h2>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

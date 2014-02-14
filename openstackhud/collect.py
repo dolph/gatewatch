@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import os
+import time
 
 import dogpile.cache
 import requests
@@ -54,18 +55,12 @@ def get_gate_duration():
     return seconds
 
 
-def count_gating_changes():
+def list_gating_changes_to_projects(projects):
     """Returns the number of seconds required to land a change."""
-    # look at the top change in the queue
-    projects = [
-        PROJECT,
-        'openstack/python-keystoneclient',
-        'openstack/identity-api']
+    gate_duration = get_gate_duration()
+    now = time.time()
 
     changes = []
-    gate_duration = get_gate_duration()
-    import time
-    now = time.time()
     for change in list_gating_changes():
         # skip changes to other projects
         if change['project'] not in projects:
@@ -114,10 +109,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
+    # should come from args
+    projects = [
+        PROJECT,
+        'openstack/python-keystoneclient',
+        'openstack/identity-api']
+
     print(
         'Gate duration: %d %s' % human_readable_duration(get_gate_duration()))
 
     print('Gating changes:')
-    for change in count_gating_changes():
+    for change in list_gating_changes_to_projects(projects):
         value, units = human_readable_duration(change['eta'])
         print('  %s: %d %s' % (change['url'], value, units))
