@@ -55,17 +55,38 @@ def get_gate_duration():
 
 
 def human_readable_duration(seconds):
-    """Converts an integer in seconds to a human readable string."""
-    if seconds / 60 / 60 > 1:
-        return '%d hours' % round(seconds / 60. / 60.)
-    elif seconds / 60 > 1:
-        return '%d minutes' % round(seconds / 60.)
+    """Converts a large number of seconds to a human readable tuple.
+
+    :returns: (int, "unit of time")
+
+    """
+    if seconds / 60. / 60. / 24. / 7. / 52. > 1:
+        t = (seconds / 60. / 60. / 24. / 7. / 52., 'years')
+    elif seconds / 60. / 60. / 24. / 7. / (52. / 12.) > 1:
+        t = (seconds / 60. / 60. / 24. / 7. / (52. / 12.), 'months')
+    elif seconds / 60. / 60. / 24. / 7. > 1:
+        t = (seconds / 60. / 60. / 24. / 7., 'weeks')
+    elif seconds / 60. / 60. / 24. > 1:
+        t = (seconds / 60. / 60. / 24., 'days')
+    elif seconds / 60. / 60. > 1:
+        t = (seconds / 60. / 60., 'hours')
+    elif seconds / 60. > 1:
+        t = (seconds / 60., 'minutes')
     else:
-        return '%d seconds' % round(seconds / 60.)
+        t = (seconds, 'seconds')
+
+    # convert to an int
+    value = int(round(t[0]))
+
+    # drop plurality on the unit if appropriate
+    units = t[1] if value != 1 else t[1][:-1]
+
+    return (value, units)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
-    print('Gate duration: %s' % human_readable_duration(get_gate_duration()))
+    print(
+        'Gate duration: %d %s' % human_readable_duration(get_gate_duration()))
