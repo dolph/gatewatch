@@ -2,10 +2,10 @@ import os
 
 import flask
 
-from openstackhud import app  # flake8: noqa
-from openstackhud import collect
-from openstackhud import decorators
-from openstackhud import gerrit
+from gatewatch import app  # flake8: noqa
+from gatewatch import collect
+from gatewatch import decorators
+from gatewatch import gerrit
 
 
 # should come from config

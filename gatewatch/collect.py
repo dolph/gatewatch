@@ -4,7 +4,7 @@ import time
 
 import requests
 
-from openstackhud import cache
+from gatewatch import cache
 
 
 PROJECT = 'openstack/keystone'

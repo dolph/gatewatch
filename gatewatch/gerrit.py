@@ -15,12 +15,8 @@ import json
 import socket
 
 import paramiko
-import pkg_resources
 
-from openstackhud import cache
-
-
-__version__ = pkg_resources.require('watch-review')[0].version
+from gatewatch import cache
 
 
 DEFAULT_GERRIT_HOST = 'review.openstack.org'
