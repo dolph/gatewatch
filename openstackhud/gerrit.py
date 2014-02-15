@@ -1,0 +1,103 @@
+# Licensed under the Apache License, Version 2.0 (the "License"); you may
+# not use this file except in compliance with the License. You may obtain
+# a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+
+import getpass
+import json
+import socket
+
+import paramiko
+import pkg_resources
+
+from openstackhud import cache
+
+
+__version__ = pkg_resources.require('watch-review')[0].version
+
+
+DEFAULT_GERRIT_HOST = 'review.openstack.org'
+DEFAULT_GERRIT_PORT = 29418
+
+# used for tracking the last known state of each change
+COMMENTS = {}
+STATUS = {}
+
+CLIENT = None
+CLIENT_KWARGS = dict()
+
+
+class Disconnected(Exception):
+    pass
+
+
+def get_client(**kwargs):
+    global CLIENT
+
+    # remember client configuration
+    CLIENT_KWARGS.update(kwargs)
+    CLIENT_KWARGS.setdefault('host', DEFAULT_GERRIT_HOST)
+    CLIENT_KWARGS.setdefault('port', DEFAULT_GERRIT_PORT)
+    CLIENT_KWARGS.setdefault('user', getpass.getuser())
+
+    def ssh_client(host, port, user=None, key=None):
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.load_system_host_keys()
+        try:
+            client.connect(host, port=port, key_filename=key, username=user)
+        except paramiko.PasswordRequiredException:
+            password = getpass.getpass('SSH Key Passphrase: ')
+            client.connect(
+                host, port=port, key_filename=key, username=user,
+                password=password)
+        return client
+
+    if CLIENT is None:
+        # generate a new client
+        CLIENT = ssh_client(**CLIENT_KWARGS)
+
+    return CLIENT
+
+
+def ssh_client_command(command):
+    global CLIENT
+
+    try:
+        stdin, stdout, stderr = get_client().exec_command(command)
+    except socket.error:
+        # throw the client away, we'll build a new one next time
+        CLIENT = None
+
+        raise Disconnected()
+
+    return stdin, stdout, stderr
+
+
+@cache.cache_on_arguments(expiration_time=60 * 60)
+def get_review(review_number):
+    reviews = []
+
+    limit = 100
+
+    while True:
+        query = [
+            'gerrit', 'query', review_number, 'limit:%s' % limit,
+            '--current-patch-set', '--format=JSON', ]
+        if reviews:
+            query.append('resume_sortkey:%s' % reviews[-2]['sortKey'])
+        stdin, stdout, stderr = ssh_client_command(' '.join(query))
+
+        for line in stdout:
+            reviews.append(json.loads(line))
+        if reviews[-1]['rowCount'] != limit:
+            break
+
+    return [x for x in reviews if 'id' in x].pop()

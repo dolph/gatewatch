@@ -2,11 +2,6 @@ body {
     color: #ddd;
     background: black;
 }
-textarea {
-    resize: vertical;
-    height: 250px;
-    font-family: monospace;
-}
-h3 {
-    text-transform: uppercase;
+a, a:hover {
+    color: #ddd;
 }

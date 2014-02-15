@@ -5,6 +5,8 @@ import flask
 from openstackhud import app  # flake8: noqa
 from openstackhud import collect
 from openstackhud import decorators
+from openstackhud import gerrit
+
 
 # should come from config
 PROJECTS = [
@@ -20,6 +22,10 @@ def index():
     changes = collect.list_gating_changes_to_projects(PROJECTS)
     for change in changes:
         change['eta'] = collect.human_readable_duration(change['eta'])
+        change['number'] = change['url'].split('/')[-1]
+
+        review = gerrit.get_review(change['number'])
+        change['subject'] = review['subject']
 
     return dict(
         gate_duration=collect.human_readable_duration(gate_duration),

@@ -1,31 +1,22 @@
 import argparse
 import datetime
-import os
 import time
 
-import dogpile.cache
 import requests
 
+from openstackhud import cache
 
-CACHE_DIR = os.path.expanduser('~/.openstack-hud')
-if not os.path.exists(CACHE_DIR):
-    os.mkdir(CACHE_DIR, 0o0700)
-
-CACHE = dogpile.cache.make_region().configure(
-    'dogpile.cache.dbm',
-    expiration_time=15,
-    arguments={'filename': '%s/cache.dbm' % CACHE_DIR})
 
 PROJECT = 'openstack/keystone'
 
 
-@CACHE.cache_on_arguments()
+@cache.cache_on_arguments()
 def get_zuul_status():
     r = requests.get('http://zuul.openstack.org/status.json')
     return r.json()
 
 
-@CACHE.cache_on_arguments()
+@cache.cache_on_arguments()
 def list_gating_changes():
     status = get_zuul_status()
     gate = [x for x in status['pipelines'] if x['name'] == 'gate'].pop()
