@@ -41,7 +41,10 @@ def list_gating_changes():
 def get_gate_duration():
     """Returns the number of seconds required to land a change."""
     # look at the top change in the queue
-    top_change = list_gating_changes()[0]
+    changes = list_gating_changes()
+    if not changes:
+        return 0
+    top_change = changes[0]
 
     # calculate number of seconds since the change was enqueued
     enqueued_timestamp = top_change['enqueue_time'] / 1000.
