@@ -11,9 +11,11 @@ Launchpad queries:
 Gerrit queries:
 
 - Open reviews
+- Number of failed patches
 
 Zuul queries:
 
 - Gate queue duration
 - Gating changes
 - Gate cadence
+- Number of sequentially successful / failed changes
