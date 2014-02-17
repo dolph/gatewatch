@@ -4,26 +4,20 @@ import flask
 
 from gatewatch import app  # flake8: noqa
 from gatewatch import backend
-from gatewatch import collect
 from gatewatch import decorators
 from gatewatch import gerrit
 from gatewatch import tasks
-
-
-# should come from config
-PROJECTS = [
-    'openstack/keystone',
-    'openstack/python-keystoneclient']
+from gatewatch import utils
 
 
 @app.route('/', methods=['GET'])
 @decorators.templated()
 def index():
-    gate_duration = collect.get_gate_duration()
+    gate_duration = backend.read('gate_duration')
 
-    changes = collect.list_gating_changes_to_projects(PROJECTS)
+    changes = backend.read('gating_changes')
     for change in changes:
-        change['eta'] = collect.human_readable_duration(change['eta'])
+        change['eta'] = utils.human_readable_duration(change['eta'])
         change['number'] = change['url'].split('/')[-1]
 
         review = gerrit.get_review(change['number'])
@@ -31,7 +25,7 @@ def index():
 
     return dict(
         data=backend.read('incrementing', default=0),
-        gate_duration=collect.human_readable_duration(gate_duration),
+        gate_duration=utils.human_readable_duration(gate_duration),
         changes=changes)
 
 
