@@ -14,22 +14,22 @@ app.conf.update(
     CELERY_TIMEZONE='UTC',
     CELERYBEAT_SCHEDULE={
         'count-open-reviews': {
-            'task': 'gatewatch.gerrit.count_open_reviews',
+            'task': 'gatewatch.sources.gerrit.count_open_reviews',
             'schedule': datetime.timedelta(minutes=1),
         },
         'count-failed-merges': {
-            'task': 'gatewatch.gerrit.count_failed_merges',
+            'task': 'gatewatch.sources.gerrit.count_failed_merges',
             'schedule': datetime.timedelta(minutes=1),
         },
         'get-gate-duration': {
-            'task': 'gatewatch.zuul.get_gate_duration',
+            'task': 'gatewatch.sources.zuul.get_gate_duration',
             'schedule': datetime.timedelta(minutes=1),
         },
         'get-gating-changes': {
-            'task': 'gatewatch.zuul.list_gating_changes_to_projects',
+            'task': 'gatewatch.sources.zuul.list_gating_changes_to_projects',
             'schedule': datetime.timedelta(minutes=1),
             'args': (PROJECTS,),
         },
     },
-    CELERY_IMPORTS=('gatewatch.zuul', 'gatewatch.gerrit'),
+    CELERY_IMPORTS=('gatewatch.sources'),
 )

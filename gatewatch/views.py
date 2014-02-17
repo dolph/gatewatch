@@ -2,11 +2,10 @@ import os
 
 import flask
 
-from gatewatch import app  # flake8: noqa
+from gatewatch import app  # noqa
 from gatewatch import backend
 from gatewatch import decorators
-from gatewatch import gerrit
-from gatewatch import tasks
+from gatewatch.sources import gerrit
 from gatewatch import utils
 
 
@@ -23,11 +22,13 @@ def index():
         review = gerrit.get_review(change['number'])
         change['subject'] = review['subject']
 
+    bp_percent = backend.read('blueprint_completion_percentage', default=41)
+
     return dict(
         open_reviews=backend.read('open_reviews', default=0),
         failed_merges=backend.read('failed_merges', default=0),
         known_vulnerabilities=backend.read('known_vulnerabilities', default=0),
-        blueprint_completion_percentage=backend.read('blueprint_completion_percentage', default=41),
+        blueprint_completion_percentage=bp_percent,
         gate_duration=utils.human_readable_duration(gate_duration),
         changes=changes)
 
