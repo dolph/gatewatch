@@ -8,10 +8,14 @@
         <div class="span4">
             <h4>Gate Queue</h4>
             <h1>
-                {% if gate_duration[0] > 1 %}
-                    {{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small>
-                {% else %}
+                {% if gate_duration[0] == 0 %}
                     <span class="text-success">Empty</span>
+                {% elif gate_duration[1].startswith("second") or gate_duration[1].startswith("minute") or gate_duration[1].startswith("hour") and gate_duration[0] <= 6 %}
+                    <span class="text-success">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
+                {% elif gate_duration[1].startswith("hour") %}
+                    <span class="text-warning">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
+                {% else %}
+                    <span class="text-error">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
                 {% endif %}
             </h1>
         </div>
