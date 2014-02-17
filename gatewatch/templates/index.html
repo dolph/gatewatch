@@ -1,12 +1,58 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="row">
-        <div class="span4"></div>
-        <div class="span4 text-center">
-            <h1>{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></h1>
-            <h3 style="text-transform: uppercase;">Gate Queue</h3>
+        <div class="span4">
+            <h4>Open Reviews</h4>
+            <h1 class="muted">{{ gate_duration[0] }}</h1>
         </div>
-        <div class="span4"></div>
+        <div class="span4">
+            <h4>Gate Queue</h4>
+            <h1>
+                {% if gate_duration[0] > 1 %}
+                    {{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small>
+                {% else %}
+                    <span class="text-success">Empty</span>
+                {% endif %}
+            </h1>
+        </div>
+        <div class="span4">
+            <h4>Failed Merges</h4>
+            <h1>
+                {% if gate_duration[0] > 1 %}
+                    <span class="text-warning">{{ gate_duration[0] }}</span>
+                {% else %}
+                    <span class="text-muted">0</span>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h4>Next Milestone</h4>
+            <h1>18 <small>days</small></h1>
+        </div>
+        <div class="span4">
+            <h4>Known Vulnerabilities</h4>
+            <h1>{{ gate_duration[0] }}</h1>
+        </div>
+        <div class="span4">
+            <h4>Blueprints</h4>
+            <h1>26<small>%</small></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h4>Untriaged Issues</h4>
+            <h1>{{ gate_duration[0] }}</h1>
+        </div>
+        <div class="span4">
+            <h4>Known Vulnerabilities</h4>
+            <h1>{{ gate_duration[0] }}</h1>
+        </div>
+        <div class="span4">
+            <h4>Blueprints</h4>
+            <h1>{{ gate_duration[0] }}</h1>
+        </div>
     </div>
     <div class="row">
         <div class="span12">
