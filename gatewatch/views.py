@@ -24,7 +24,10 @@ def index():
         change['subject'] = review['subject']
 
     return dict(
-        data=backend.read('incrementing', default=0),
+        open_reviews=backend.read('open_reviews', default=0),
+        failed_merges=backend.read('failed_merges', default=0),
+        known_vulnerabilities=backend.read('known_vulnerabilities', default=0),
+        blueprint_completion_percentage=backend.read('blueprint_completion_percentage', default=41),
         gate_duration=utils.human_readable_duration(gate_duration),
         changes=changes)
 
