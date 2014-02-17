@@ -14,4 +14,5 @@ setuptools.setup(
         'requests',
         'celery',
         'redis',
+        'paramiko',
         'dogpile.cache'])

@@ -3,3 +3,5 @@ requests
 sqlalchemy
 celery
 redis
+dogpile.cache
+paramiko
