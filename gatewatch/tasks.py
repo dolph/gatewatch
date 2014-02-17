@@ -2,8 +2,6 @@ import datetime
 
 import celery
 
-from gatewatch import backend
-
 
 PROJECTS = ['openstack/keystone', 'openstack/python-keystoneclient']
 
@@ -15,10 +13,6 @@ app = celery.Celery('tasks', broker=BROKER_URL)
 app.conf.update(
     CELERY_TIMEZONE='UTC',
     CELERYBEAT_SCHEDULE={
-        'gather-data-every-30-seconds': {
-            'task': 'gatewatch.tasks.gather_data',
-            'schedule': datetime.timedelta(seconds=3),
-        },
         'get-gate-duration': {
             'task': 'gatewatch.zuul.get_gate_duration',
             'schedule': datetime.timedelta(minutes=1),
@@ -26,13 +20,8 @@ app.conf.update(
         'get-gating-changes': {
             'task': 'gatewatch.zuul.list_gating_changes_to_projects',
             'schedule': datetime.timedelta(minutes=1),
-            'arguments': (PROJECTS,),
+            'args': (PROJECTS,),
         },
     },
+    CELERY_IMPORTS=('gatewatch.zuul',),
 )
-
-
-@app.task
-def gather_data():
-    value = backend.read('incrementing', 0)
-    backend.write(incrementing=value + 1)

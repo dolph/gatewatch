@@ -13,9 +13,9 @@ from gatewatch import utils
 @app.route('/', methods=['GET'])
 @decorators.templated()
 def index():
-    gate_duration = backend.read('gate_duration')
+    gate_duration = backend.read('gate_duration', default=0)
 
-    changes = backend.read('gating_changes')
+    changes = backend.read('gating_changes', default=[])
     for change in changes:
         change['eta'] = utils.human_readable_duration(change['eta'])
         change['number'] = change['url'].split('/')[-1]

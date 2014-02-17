@@ -3,7 +3,9 @@ import time
 
 import requests
 
+from gatewatch import backend
 from gatewatch import cache
+from gatewatch import tasks
 
 
 PROJECT = 'openstack/keystone'
@@ -28,6 +30,7 @@ def list_gating_changes():
     return changes
 
 
+@tasks.app.task
 def get_gate_duration():
     """Returns the number of seconds required to land a change."""
     # look at the top change in the queue
@@ -45,9 +48,12 @@ def get_gate_duration():
     if top_change['remaining_time'] is not None:
         seconds = seconds + top_change['remaining_time'] / 1000.
 
+    backend.write(gate_duration=seconds)
+
     return seconds
 
 
+@tasks.app.task
 def list_gating_changes_to_projects(projects):
     """Returns the number of seconds required to land a change."""
     gate_duration = get_gate_duration()
@@ -64,5 +70,7 @@ def list_gating_changes_to_projects(projects):
         changes.append(dict(
             url=change['url'],
             eta=eta))
+
+    backend.write(gating_changes=changes)
 
     return changes
