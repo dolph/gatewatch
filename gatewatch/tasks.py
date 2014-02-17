@@ -4,6 +4,7 @@ import celery
 
 
 PROJECTS = ['openstack/keystone', 'openstack/python-keystoneclient']
+PRIMARY_PROJECT = PROJECTS[0]
 
 BROKER_URL = 'redis://localhost:6379/0'
 
@@ -29,6 +30,11 @@ app.conf.update(
             'task': 'gatewatch.sources.zuul.list_gating_changes_to_projects',
             'schedule': datetime.timedelta(minutes=1),
             'args': (PROJECTS,),
+        },
+        'next-milestone-date': {
+            'task': 'gatewatch.sources.launchpad.next_milestone_date',
+            'schedule': datetime.timedelta(seconds=1),
+            'args': (PRIMARY_PROJECT,),
         },
     },
     CELERY_IMPORTS=('gatewatch.sources'),
