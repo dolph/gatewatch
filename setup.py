@@ -11,4 +11,7 @@ setuptools.setup(
     test_suite='tests',
     install_requires=[
         'Flask',
+        'requests',
+        'celery',
+        'redis',
         'dogpile.cache'])
