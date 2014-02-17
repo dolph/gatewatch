@@ -1,4 +1,3 @@
-import argparse
 import datetime
 import time
 
@@ -67,52 +66,3 @@ def list_gating_changes_to_projects(projects):
             eta=eta))
 
     return changes
-
-
-def human_readable_duration(seconds):
-    """Converts a large number of seconds to a human readable tuple.
-
-    :returns: (int, "unit of time")
-
-    """
-    if seconds / 60. / 60. / 24. / 7. / 52. > 1:
-        t = (seconds / 60. / 60. / 24. / 7. / 52., 'years')
-    elif seconds / 60. / 60. / 24. / 7. / (52. / 12.) > 1:
-        t = (seconds / 60. / 60. / 24. / 7. / (52. / 12.), 'months')
-    elif seconds / 60. / 60. / 24. / 7. > 1:
-        t = (seconds / 60. / 60. / 24. / 7., 'weeks')
-    elif seconds / 60. / 60. / 24. > 1:
-        t = (seconds / 60. / 60. / 24., 'days')
-    elif seconds / 60. / 60. > 1:
-        t = (seconds / 60. / 60., 'hours')
-    elif seconds / 60. > 1:
-        t = (seconds / 60., 'minutes')
-    else:
-        t = (seconds, 'seconds')
-
-    # convert to an int
-    value = int(round(t[0]))
-
-    # drop plurality on the unit if appropriate
-    units = t[1] if value != 1 else t[1][:-1]
-
-    return (value, units)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    args = parser.parse_args()
-
-    # should come from args
-    projects = [
-        PROJECT,
-        'openstack/python-keystoneclient',
-        'openstack/identity-api']
-
-    print(
-        'Gate duration: %d %s' % human_readable_duration(get_gate_duration()))
-
-    print('Gating changes:')
-    for change in list_gating_changes_to_projects(projects):
-        value, units = human_readable_duration(change['eta'])
-        print('  %s: %d %s' % (change['url'], value, units))
