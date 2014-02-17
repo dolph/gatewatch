@@ -13,6 +13,14 @@ app = celery.Celery('tasks', broker=BROKER_URL)
 app.conf.update(
     CELERY_TIMEZONE='UTC',
     CELERYBEAT_SCHEDULE={
+        'count-open-reviews': {
+            'task': 'gatewatch.gerrit.count_open_reviews',
+            'schedule': datetime.timedelta(minutes=1),
+        },
+        'count-failed-merges': {
+            'task': 'gatewatch.gerrit.count_failed_merges',
+            'schedule': datetime.timedelta(minutes=1),
+        },
         'get-gate-duration': {
             'task': 'gatewatch.zuul.get_gate_duration',
             'schedule': datetime.timedelta(minutes=1),
@@ -23,5 +31,5 @@ app.conf.update(
             'args': (PROJECTS,),
         },
     },
-    CELERY_IMPORTS=('gatewatch.zuul',),
+    CELERY_IMPORTS=('gatewatch.zuul', 'gatewatch.gerrit'),
 )

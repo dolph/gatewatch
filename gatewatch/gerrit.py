@@ -16,7 +16,9 @@ import socket
 
 import paramiko
 
+from gatewatch import backend
 from gatewatch import cache
+from gatewatch import tasks
 
 
 DEFAULT_GERRIT_HOST = 'review.openstack.org'
@@ -77,15 +79,15 @@ def ssh_client_command(command):
     return stdin, stdout, stderr
 
 
-@cache.cache_on_arguments(expiration_time=60 * 60)
-def get_review(review_number):
+@cache.cache_on_arguments(expiration_time=60 * 5)
+def query(query):
     reviews = []
 
     limit = 100
 
     while True:
         query = [
-            'gerrit', 'query', review_number, 'limit:%s' % limit,
+            'gerrit', 'query', query, 'limit:%s' % limit,
             '--current-patch-set', '--format=JSON', ]
         if reviews:
             query.append('resume_sortkey:%s' % reviews[-2]['sortKey'])
@@ -96,4 +98,39 @@ def get_review(review_number):
         if reviews[-1]['rowCount'] != limit:
             break
 
-    return [x for x in reviews if 'id' in x].pop()
+    return [x for x in reviews if 'id' in x]
+
+
+def get_review(review_number):
+    return query(review_number).pop()
+
+
+@tasks.app.task
+def count_open_reviews():
+    q = [
+        'status:open',
+        'AND (',
+        'project:openstack/keystone',
+        'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/identity-api',
+        ')']
+    count = len(query(' '.join(q)))
+    backend.write(open_reviews=count)
+    return count
+
+
+@tasks.app.task
+def count_failed_merges():
+    q = [
+        'status:open',
+        '(',
+        'project:openstack/keystone',
+        'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/identity-api',
+        ')',
+        'approved+1',
+        'codereview+2',
+        'verified-1']
+    count = len(query(' '.join(q)))
+    backend.write(failed_merges=count)
+    return count

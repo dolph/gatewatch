@@ -10,7 +10,7 @@ def read(key, default=None):
     value = REDIS.get(key)
     if value is None:
         return default
-    return json.loads(value)
+    return json.loads(value) if value is not None else default
 
 
 def write(**kwargs):
