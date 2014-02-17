@@ -6,6 +6,7 @@ from gatewatch import app  # flake8: noqa
 from gatewatch import collect
 from gatewatch import decorators
 from gatewatch import gerrit
+from gatewatch import tasks
 
 
 # should come from config
@@ -28,6 +29,7 @@ def index():
         change['subject'] = review['subject']
 
     return dict(
+        data=tasks.read('test', 'pending'),
         gate_duration=collect.human_readable_duration(gate_duration),
         changes=changes)
 
