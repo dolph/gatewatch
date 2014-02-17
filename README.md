@@ -17,5 +17,4 @@ Zuul queries:
 
 - Gate queue duration
 - Gating changes
-- Gate cadence
 - Number of sequentially successful / failed changes
