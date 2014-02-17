@@ -2,6 +2,8 @@ import datetime
 
 import celery
 
+from gatewatch import backend
+
 
 BROKER_URL = 'redis://localhost:6379/0'
 
@@ -14,29 +16,13 @@ app.conf.update(
     CELERYBEAT_SCHEDULE={
         'gather-data-every-30-seconds': {
             'task': 'gatewatch.tasks.gather_data',
-            'schedule': datetime.timedelta(seconds=30),
+            'schedule': datetime.timedelta(seconds=3),
         },
     },
 )
 
 
-import redis
-
-
-REDIS = redis.StrictRedis(host='localhost', port=6379, db=1)
-
-
-def read(key, default=None):
-    value = REDIS.get(key)
-    if value is None:
-        return default
-    return value
-
-
-def write(key, value):
-    REDIS.set(key, value)
-
-
 @app.task
 def gather_data():
-    write('test', 'success')
+    value = backend.read('incrementing', 0)
+    backend.write(incrementing=value + 1)

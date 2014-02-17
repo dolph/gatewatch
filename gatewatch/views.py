@@ -3,6 +3,7 @@ import os
 import flask
 
 from gatewatch import app  # flake8: noqa
+from gatewatch import backend
 from gatewatch import collect
 from gatewatch import decorators
 from gatewatch import gerrit
@@ -29,7 +30,7 @@ def index():
         change['subject'] = review['subject']
 
     return dict(
-        data=tasks.read('test', 'pending'),
+        data=backend.read('incrementing', default=0),
         gate_duration=collect.human_readable_duration(gate_duration),
         changes=changes)
 
