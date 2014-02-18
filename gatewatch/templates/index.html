@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="row">
-        <div class="span4">
+        <div class="span3">
             <h4>Open Reviews</h4>
             <h1>{{ open_reviews }}</h1>
         </div>
-        <div class="span4">
+        <div class="span3">
             <h4>Gate Queue</h4>
             <h1>
                 {% if gate_duration[0] == 0 %}
@@ -19,7 +19,7 @@
                 {% endif %}
             </h1>
         </div>
-        <div class="span4">
+        <div class="span3">
             <h4>Failed Merges</h4>
             <h1>
                 {% if failed_merges %}
@@ -29,23 +29,21 @@
                 {% endif %}
             </h1>
         </div>
-    </div>
-    <div class="row">
-        <div class="span4"></div>
-        <div class="span4">
+        <div class="span3">
             <h4>Next Milestone</h4>
             <h1>{{ next_milestone[0] }} <small>{{ next_milestone[1] }}</small></h1>
         </div>
-        <div class="span4"></div>
     </div>
     <div class="row">
         <div class="span12">
-            <dl class="dl-horizontal">
+            <table class="table table-condensed">
                 {% for change in changes %}
-                    <dt><h2>{{ change['eta'][0] }} <small>{{ change['eta'][1] }}</small></h2><dt>
-                    <dd><h3><a href="{{ change['url'] }}">{{ change['subject'] }}</a></h3><dd>
+                    <tr>
+                        <td><h3>{{ change['eta'][0] }} <small>{{ change['eta'][1] }}</small></h3></td>
+                        <td><h3><a href="{{ change['url'] }}">{{ change['subject'] }}</a></h3></td>
+                    </tr>
                 {% endfor %}
-            </dl>
+            </table>
         </div>
     </div>
 {% endblock %}
