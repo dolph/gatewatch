@@ -16,24 +16,24 @@ app.conf.update(
     CELERYBEAT_SCHEDULE={
         'count-open-reviews': {
             'task': 'gatewatch.sources.gerrit.count_open_reviews',
-            'schedule': datetime.timedelta(minutes=1),
+            'schedule': datetime.timedelta(minutes=5),
         },
         'count-failed-merges': {
             'task': 'gatewatch.sources.gerrit.count_failed_merges',
-            'schedule': datetime.timedelta(minutes=1),
+            'schedule': datetime.timedelta(minutes=15),
         },
         'get-gate-duration': {
             'task': 'gatewatch.sources.zuul.get_gate_duration',
-            'schedule': datetime.timedelta(minutes=1),
+            'schedule': datetime.timedelta(minutes=5),
         },
         'get-gating-changes': {
             'task': 'gatewatch.sources.zuul.list_gating_changes_to_projects',
-            'schedule': datetime.timedelta(minutes=1),
+            'schedule': datetime.timedelta(minutes=3),
             'args': (PROJECTS,),
         },
         'next-milestone-date': {
             'task': 'gatewatch.sources.launchpad.next_milestone_date',
-            'schedule': datetime.timedelta(seconds=1),
+            'schedule': datetime.timedelta(hours=6),
             'args': (PRIMARY_PROJECT,),
         },
     },
