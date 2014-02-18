@@ -31,24 +31,12 @@
         </div>
     </div>
     <div class="row">
+        <div class="span4"></div>
         <div class="span4">
             <h4>Next Milestone</h4>
             <h1>{{ next_milestone[0] }} <small>{{ next_milestone[1] }}</small></h1>
         </div>
-        <div class="span4">
-            <h4>Known Vulnerabilities</h4>
-            <h1>
-                {% if known_vulnerabilities %}
-                    <span class="text-warning">{{ known_vulnerabilities }}</span>
-                {% else %}
-                    <span class="muted">0</span>
-                {% endif %}
-            </h1>
-        </div>
-        <div class="span4">
-            <h4>Blueprints</h4>
-            <h1>{{ blueprint_completion_percentage }}<small>%</small></h1>
-        </div>
+        <div class="span4"></div>
     </div>
     <div class="row">
         <div class="span12">
