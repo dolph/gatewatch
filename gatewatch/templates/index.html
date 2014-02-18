@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
     <div class="row">
+        <div class="span12">
+            <img src="http://graphite.openstack.org/render/?from=-24hours&width=940&height=100&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27{{ '7' * 6 }}%27)&bgcolor=000000" />
+        </div>
+    </div>
+    <div class="row">
         <div class="span3">
             <h4>Open Reviews</h4>
             <h1>{{ open_reviews }}</h1>
