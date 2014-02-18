@@ -80,15 +80,14 @@ def ssh_client_command(command):
 
 
 @cache.cache_on_arguments(expiration_time=60 * 5)
-def query(query):
+def query(q):
     reviews = []
 
     limit = 100
 
     while True:
         query = [
-            'gerrit', 'query', query, 'limit:%s' % limit,
-            '--current-patch-set', '--format=JSON', ]
+            'gerrit', 'query', q, 'limit:%s' % limit, '--format=JSON']
         if reviews:
             query.append('resume_sortkey:%s' % reviews[-2]['sortKey'])
         stdin, stdout, stderr = ssh_client_command(' '.join(query))
@@ -113,7 +112,9 @@ def count_open_reviews():
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
         'OR project:openstack/identity-api',
-        ')']
+        ')',
+        'AND verified+1',
+        'AND (-codereview-2)']
     count = len(query(' '.join(q)))
     backend.write(open_reviews=count)
     return count
@@ -123,14 +124,14 @@ def count_open_reviews():
 def count_failed_merges():
     q = [
         'status:open',
-        '(',
+        'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
         'OR project:openstack/identity-api',
         ')',
-        'approved+1',
-        'codereview+2',
-        'verified-1']
+        'AND verified-1',
+        'AND codereview+2',
+        'AND approved+1']
     count = len(query(' '.join(q)))
     backend.write(failed_merges=count)
     return count
