@@ -29,7 +29,7 @@ COMMENTS = {}
 STATUS = {}
 
 CLIENT = None
-CLIENT_KWARGS = dict()
+CLIENT_KWARGS = dict(user='dolph')
 
 
 class Disconnected(Exception):
