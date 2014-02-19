@@ -131,7 +131,7 @@ def count_failed_merges():
         'OR project:openstack/python-keystoneclient',
         'OR project:openstack/identity-api',
         ')',
-        'AND verified-1',
+        'AND (verified-1 OR verified-2)',
         'AND codereview+2',
         'AND approved+1']
     count = len(query(' '.join(q)))
