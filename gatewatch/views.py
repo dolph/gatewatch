@@ -17,15 +17,7 @@ DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 @app.route('/', methods=['GET'])
 @decorators.templated()
 def index():
-    changes = backend.read('gating_changes', default=[])
-    for change in changes:
-        change['eta'] = utils.human_readable_duration(change['eta'])
-        change['number'] = change['url'].split('/')[-1]
-
-        review = gerrit.get_review(change['number'])
-        change['subject'] = review['subject']
-
-    return dict(changes=changes)
+    pass
 
 
 @app.route('/data', methods=['GET'])

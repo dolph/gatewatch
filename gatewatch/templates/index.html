@@ -32,6 +32,16 @@
                     }
 
                     $('#next_milestone').html(data.next_milestone[0] + ' <small>' + data.next_milestone[1] + '</small>');
+
+                    var s = '';
+                    for (var i = 0; i < data.changes.length; i++) {
+                        var change = data.changes[i];
+                        s = s + '<tr>';
+                        s = s + '<td><h3>' + change['eta'][0] + ' <small>' + change['eta'][1] + '</small></h3></td>';
+                        s = s + '<td><h3><a href="' + change['url'] + '">' + change['subject'] + '</a></h3></td>';
+                        s = s + '</tr>';
+                    }
+                    $('#changes').html(s);
                 }
             );
             setTimeout("loadData()", 30 * 1000);
@@ -65,14 +75,7 @@
     </div>
     <div class="row">
         <div class="span12">
-            <table class="table table-condensed" id="changes">
-                {% for change in changes %}
-                    <tr>
-                        <td><h3>{{ change['eta'][0] }} <small>{{ change['eta'][1] }}</small></h3></td>
-                        <td><h3><a href="{{ change['url'] }}">{{ change['subject'] }}</a></h3></td>
-                    </tr>
-                {% endfor %}
-            </table>
+            <table class="table table-condensed" id="changes"></table>
         </div>
     </div>
 {% endblock %}
