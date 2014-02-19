@@ -114,7 +114,9 @@ def count_open_reviews():
         'OR project:openstack/identity-api',
         ')',
         'AND verified+1',
-        'AND (-codereview-2)']
+        'AND (-codereview-1)',
+        'AND (-codereview-2)',
+        'AND (-approved+1)']
     count = len(query(' '.join(q)))
     backend.write(open_reviews=count)
     return count
