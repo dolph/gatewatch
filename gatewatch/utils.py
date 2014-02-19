@@ -4,17 +4,17 @@ def human_readable_duration(seconds):
     :returns: (int, "unit of time")
 
     """
-    if seconds / 60. / 60. / 24. / 7. / 52. > 1:
+    if round(seconds / 60. / 60. / 24. / 7. / 52.) > 2:
         t = (seconds / 60. / 60. / 24. / 7. / 52., 'years')
-    elif seconds / 60. / 60. / 24. / 7. / (52. / 12.) > 1:
+    elif round(seconds / 60. / 60. / 24. / 7. / (52. / 12.)) > 2:
         t = (seconds / 60. / 60. / 24. / 7. / (52. / 12.), 'months')
-    elif seconds / 60. / 60. / 24. / 7. > 1:
+    elif round(seconds / 60. / 60. / 24. / 7.) > 2:
         t = (seconds / 60. / 60. / 24. / 7., 'weeks')
-    elif seconds / 60. / 60. / 24. > 1:
+    elif round(seconds / 60. / 60. / 24.) > 2:
         t = (seconds / 60. / 60. / 24., 'days')
-    elif seconds / 60. / 60. > 1:
+    elif round(seconds / 60. / 60.) > 2:
         t = (seconds / 60. / 60., 'hours')
-    elif seconds / 60. > 1:
+    elif round(seconds / 60.) > 2:
         t = (seconds / 60., 'minutes')
     else:
         t = (seconds, 'seconds')
