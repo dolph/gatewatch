@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="application/javascript">
-        var GRAPH_URL = "http://graphite.openstack.org/render/?from=-24hours&width={{ 940 * 2 }}&height={{ 80 * 2 }}&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27aaaaaa%27)&bgcolor=000000";
+        var GRAPH_URL = "http://graphite.openstack.org/render/?from=-24hours&width=940&height=80&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27999999%27)&bgcolor=000000";
 
         // add a startswith function to all strings
         // http://stackoverflow.com/questions/646628
