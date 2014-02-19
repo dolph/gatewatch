@@ -24,11 +24,14 @@ def index():
 def data():
     gate_duration = backend.read('gate_duration', default=0)
 
-    next_milestone_date = backend.read('next_milestone_date', default=0)
-    next_milestone_date = datetime.datetime.strptime(
-        next_milestone_date, DATETIME_FORMAT)
-    next_milestone = next_milestone_date - datetime.datetime.utcnow()
-    next_milestone = next_milestone.days * 86400 + next_milestone.seconds
+    next_milestone_date = backend.read('next_milestone_date')
+    if next_milestone_date is not None:
+        next_milestone_date = datetime.datetime.strptime(
+            next_milestone_date, DATETIME_FORMAT)
+        next_milestone = next_milestone_date - datetime.datetime.utcnow()
+        next_milestone = next_milestone.days * 86400 + next_milestone.seconds
+    else:
+        next_milestone = 0
 
     changes = backend.read('gating_changes', default=[])
     for change in changes:
