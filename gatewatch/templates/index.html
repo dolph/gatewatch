@@ -1,4 +1,44 @@
 {% extends "layout.html" %}
+{% block script %}
+    <script type="application/javascript">
+        // add a startswith function to all strings
+        // http://stackoverflow.com/questions/646628
+        if (typeof String.prototype.startswith != 'function') {
+            String.prototype.startswith = function (str){
+                return this.indexOf(str) == 0;
+            };
+        }
+
+        function loadData() {
+            $.getJSON("{{ url_for('data') }}",
+                function(data) {
+                    $('#open_reviews').html(data.open_reviews);
+
+                    var gate_duration = data.gate_duration;
+                    if (gate_duration[0] == 0) {
+                        $('#gate_duration').html('<span class="text-success">Empty</span>');
+                    } else if(gate_duration[1].startswith("second") || gate_duration[1].startswith("minute") || gate_duration[1].startswith("hour") && gate_duration[0] <= 6) {
+                        $('#gate_duration').html('<span class="text-success">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
+                    } else if (gate_duration[1].startswith("hour")) {
+                        $('#gate_duration').html('<span class="text-warning">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
+                    } else {
+                        $('#gate_duration').html('<span class="text-error">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
+                    }
+
+                    if (data.failed_merges) {
+                        $('#failed_merges').html('<span class="text-warning">' + data.failed_merges + '</span>');
+                    } else {
+                        $('#failed_merges').html('<span class="muted">0</span>');
+                    }
+
+                    $('#next_milestone').html(data.next_milestone[0] + ' <small>' + data.next_milestone[1] + '</small>');
+                }
+            );
+            setTimeout("loadData()", 30 * 1000);
+        }
+        $(document).ready(loadData);
+    </script>
+{% endblock %}
 {% block body %}
     <div class="row">
         <div class="span12">
@@ -8,40 +48,24 @@
     <div class="row">
         <div class="span3">
             <h4>Open Reviews</h4>
-            <h1>{{ open_reviews }}</h1>
+            <h1 id="open_reviews"></h1>
         </div>
         <div class="span3">
             <h4>Gate Queue</h4>
-            <h1>
-                {% if gate_duration[0] == 0 %}
-                    <span class="text-success">Empty</span>
-                {% elif gate_duration[1].startswith("second") or gate_duration[1].startswith("minute") or gate_duration[1].startswith("hour") and gate_duration[0] <= 6 %}
-                    <span class="text-success">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
-                {% elif gate_duration[1].startswith("hour") %}
-                    <span class="text-warning">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
-                {% else %}
-                    <span class="text-error">{{ gate_duration[0] }} <small>{{ gate_duration[1] }}</small></span>
-                {% endif %}
-            </h1>
+            <h1 id="gate_duration"></h1>
         </div>
         <div class="span3">
             <h4>Failed Merges</h4>
-            <h1>
-                {% if failed_merges %}
-                    <span class="text-warning">{{ failed_merges }}</span>
-                {% else %}
-                    <span class="muted">0</span>
-                {% endif %}
-            </h1>
+            <h1 id="failed_merges"></h1>
         </div>
         <div class="span3">
             <h4>Next Milestone</h4>
-            <h1>{{ next_milestone[0] }} <small>{{ next_milestone[1] }}</small></h1>
+            <h1 id="next_milestone"></h1>
         </div>
     </div>
     <div class="row">
         <div class="span12">
-            <table class="table table-condensed">
+            <table class="table table-condensed" id="changes">
                 {% for change in changes %}
                     <tr>
                         <td><h3>{{ change['eta'][0] }} <small>{{ change['eta'][1] }}</small></h3></td>
