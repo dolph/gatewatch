@@ -1,6 +1,8 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="application/javascript">
+        var GRAPH_URL = "http://graphite.openstack.org/render/?from=-24hours&width={{ 940 * 2 }}&height={{ 80 * 2 }}&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27777777%27)&bgcolor=000000";
+
         // add a startswith function to all strings
         // http://stackoverflow.com/questions/646628
         if (typeof String.prototype.startswith != 'function') {
@@ -42,6 +44,8 @@
                         s = s + '</tr>';
                     }
                     $('#changes').html(s);
+
+                    $('#graph').attr('src', GRAPH_URL + '&' + new Date().getTime());
                 }
             );
             setTimeout("loadData()", 30 * 1000);
@@ -52,7 +56,7 @@
 {% block body %}
     <div class="row">
         <div class="span12">
-            <img src="http://graphite.openstack.org/render/?from=-24hours&width=940&height=100&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27{{ '7' * 6 }}%27)&bgcolor=000000" />
+            <img id="graph" style="width: 940px; height: 80px;" />
         </div>
     </div>
     <div class="row">
