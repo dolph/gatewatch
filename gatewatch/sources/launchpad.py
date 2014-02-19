@@ -13,7 +13,8 @@ CACHE_DIR = os.path.expanduser('~/.launchpadlib/cache/')
 
 @tasks.app.task
 def next_milestone_date(project):
-    client = launchpad.Launchpad.login_with(NAME, LP_INSTANCE, CACHE_DIR)
+    client = launchpad.Launchpad.login_anonymously(
+        NAME, LP_INSTANCE, CACHE_DIR)
     project = client.projects[project]
 
     dates = [x.date_targeted for x in project.active_milestones
