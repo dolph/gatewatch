@@ -38,15 +38,11 @@ def data():
         review = gerrit.get_review(change['number'])
         change['subject'] = review['subject']
 
-    bp_percent = backend.read('blueprint_completion_percentage', default=41)
-
     d = dict(
         open_reviews=backend.read('open_reviews', default=0),
         gate_duration=utils.human_readable_duration(gate_duration),
         failed_merges=backend.read('failed_merges', default=0),
         next_milestone=utils.human_readable_duration(next_milestone),
-        known_vulnerabilities=backend.read('known_vulnerabilities', default=0),
-        blueprint_completion_percentage=bp_percent,
         changes=changes)
 
     return json.dumps(d), 200, {'Content-Type': 'application/json'}
