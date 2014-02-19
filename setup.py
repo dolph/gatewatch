@@ -15,4 +15,5 @@ setuptools.setup(
         'celery',
         'redis',
         'paramiko',
+        'launchpadlib',
         'dogpile.cache'])
