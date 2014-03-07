@@ -51,8 +51,14 @@
   file:
     dest=/etc/gatewatch
     state=directory
+    owner=www-data
+    group=www-data
+    mode=0700
 
 - name: deploy app config
   template:
     src=config.py
     dest=/etc/gatewatch/gatewatch.conf.py
+    owner=www-data
+    group=www-data
+    mode=0700
