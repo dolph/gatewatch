@@ -2,8 +2,13 @@ import json
 
 import redis
 
+from gatewatch import app
 
-REDIS = redis.StrictRedis(host='127.0.0.1', port=6379, db=1)
+
+REDIS = redis.StrictRedis(
+    host=app.config['REDIS_HOST'],
+    port=app.config['REDIS_PORT'],
+    db=app.config['REDIS_DB'])
 
 
 def read(key, default=None):
