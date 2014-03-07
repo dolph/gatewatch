@@ -4,8 +4,8 @@
   - name: check connectivity
     action: ping
 
-- include: playbooks/http.yaml
-- include: playbooks/wsgi.yaml
-- include: playbooks/app.yaml
-- include: playbooks/queue.yaml
 - include: playbooks/nosql.yaml
+- include: playbooks/queue.yaml
+- include: playbooks/app.yaml
+- include: playbooks/wsgi.yaml
+- include: playbooks/http.yaml
