@@ -1,0 +1,14 @@
+- name: install apt packages
+  apt:
+    pkg=gunicorn
+
+- name: deploy gunicorn config
+  template:
+    src=gunicorn.py
+    dest=/etc/gunicorn.d/gatewatch
+
+- name: ensure gunicorn is running
+  service:
+    name=gunicorn
+    enabled=yes
+    state=reloaded
