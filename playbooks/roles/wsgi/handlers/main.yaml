@@ -1,0 +1,4 @@
+- name: restart gunicorn
+  supervisorctl:
+    name=gunicorn
+    state=restarted
