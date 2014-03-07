@@ -6,6 +6,7 @@
   template:
     src=nginx.vhost
     dest=/etc/nginx/sites-enabled/default
+  notify: restart nginx
 
 - name: ensure nginx is running
   service:
