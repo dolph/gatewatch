@@ -1,4 +1,4 @@
-- name: create virtualenv
+- name: install pip packages
   pip:
     name={{ item }} state=latest
     virtualenv=/opt/gatewatch/venv
