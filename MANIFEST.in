@@ -1,2 +1,1 @@
-recursive-include gatewatch/templates *
-recursive-include gatewatch/static *
+recursive-include gatewatch *
