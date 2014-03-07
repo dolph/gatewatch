@@ -12,6 +12,7 @@ BROKER_URL = 'redis://127.0.0.1:6379/0'
 # celery -A gatewatch.tasks worker --beat --loglevel=info
 app = celery.Celery('tasks', broker=BROKER_URL)
 app.conf.update(
+    CELERY_ACCEPT_CONTENT=['json'],
     CELERY_TIMEZONE='UTC',
     CELERYBEAT_SCHEDULE={
         'count-open-reviews': {
