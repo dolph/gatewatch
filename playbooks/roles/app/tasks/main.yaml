@@ -6,7 +6,6 @@
     - git
     - python-dev
     - python-setuptools
-    - python-virtualenv
     - python-pip
 
 - name: install pip packages
@@ -17,16 +16,7 @@
   with_items:
     - setuptools
     - pip
-
-- name: install pip packages into venv
-  pip:
-    name={{ item }}
-    state=latest
-    virtualenv=/var/venv/gatewatch/
-  with_items:
-    - setuptools
-    - pip
-#   - 'git+{{ git_repo }}#egg=gatewatch'
+    - 'git+ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch#egg=gatewatch'
 
 - name: create app config dir
   file:
