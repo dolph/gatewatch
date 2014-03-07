@@ -70,3 +70,11 @@
     owner=www-data
     group=www-data
     mode=0700
+
+- name: create temp dir
+  file:
+    dest=/tmp/gatewatch
+    state=directory
+    owner=www-data
+    group=www-data
+    mode=0700
