@@ -1,2 +1,3 @@
 dump.rdb
 celerybeat-schedule
+vagrant_ansible_inventory_default
