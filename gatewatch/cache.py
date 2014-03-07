@@ -3,7 +3,7 @@ import os
 import dogpile.cache
 
 
-CACHE_DIR = os.path.expanduser('~/.gatewatch')
+CACHE_DIR = os.path.expanduser('/tmp/gatewatch')
 if not os.path.exists(CACHE_DIR):
     os.mkdir(CACHE_DIR, 0o0700)
 
