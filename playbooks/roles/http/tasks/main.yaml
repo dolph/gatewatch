@@ -1,0 +1,14 @@
+- name: install apt packages
+  apt:
+    pkg=nginx
+
+- name: deploy nginx config
+  template:
+    src=nginx.vhost
+    dest=/etc/nginx/sites-enabled/default
+
+- name: ensure nginx is running
+  service:
+    name=nginx
+    enabled=yes
+    state=started
