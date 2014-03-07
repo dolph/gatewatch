@@ -16,6 +16,7 @@ import socket
 
 import paramiko
 
+from gatewatch import app
 from gatewatch import backend
 from gatewatch import cache
 from gatewatch import tasks
@@ -90,7 +91,11 @@ def query(q):
             'gerrit', 'query', q, 'limit:%s' % limit, '--format=JSON']
         if reviews:
             query.append('resume_sortkey:%s' % reviews[-2]['sortKey'])
-        stdin, stdout, stderr = ssh_client_command(' '.join(query))
+        try:
+            stdin, stdout, stderr = ssh_client_command(' '.join(query))
+        except paramiko.SSHException as e:
+            app.logger.warning('Unable to query gerrit: %s' % e)
+            return []
 
         for line in stdout:
             reviews.append(json.loads(line))
