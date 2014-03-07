@@ -1,3 +1,9 @@
+- name: install apt packages
+  apt:
+    pkg={{ item }}
+  with_items:
+    - supervisor
+
 - name: install pip packages
   pip:
     name={{ item }} state=latest
