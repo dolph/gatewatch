@@ -3,7 +3,7 @@ import json
 import redis
 
 
-REDIS = redis.StrictRedis(host='localhost', port=6379, db=1)
+REDIS = redis.StrictRedis(host='127.0.0.1', port=6379, db=1)
 
 
 def read(key, default=None):

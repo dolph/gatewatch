@@ -6,7 +6,7 @@ import celery
 PROJECTS = ['openstack/keystone', 'openstack/python-keystoneclient']
 PRIMARY_PROJECT = PROJECTS[0]
 
-BROKER_URL = 'redis://localhost:6379/0'
+BROKER_URL = 'redis://127.0.0.1:6379/0'
 
 # start dedicated celery beat worker with:
 # celery -A gatewatch.tasks worker --beat --loglevel=info
