@@ -1,0 +1,12 @@
+- name: create virtualenv
+  pip:
+    name={{ item }} state=latest
+    virtualenv=/opt/gatewatch/venv
+  with_items:
+    - celery
+
+- name: deploy celery config
+  template:
+    src=supervisor.conf
+    dest=/etc/supervisor/conf.d/celery.conf
+  notify: restart celery
