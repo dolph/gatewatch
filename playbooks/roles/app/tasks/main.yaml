@@ -11,8 +11,7 @@
 - name: install pip packages
   pip:
     name={{ item }} state=latest
-    # depending on version of pip, this may also need:
-    # extra_args=--no-use-wheel
+    extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
   with_items:
     - setuptools
     - pip
