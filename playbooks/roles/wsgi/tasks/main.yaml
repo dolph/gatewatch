@@ -15,7 +15,7 @@
 - name: deploy gunicorn config
   template:
     src=supervisor.conf
-    dest=/etc/supervisor/conf.d/gatewatch.conf
+    dest=/etc/supervisor/conf.d/gunicorn.conf
   notify: restart gunicorn
 
 - name: ensure supervisor is running
