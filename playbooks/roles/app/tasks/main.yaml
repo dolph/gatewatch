@@ -62,3 +62,11 @@
     owner=www-data
     group=www-data
     mode=0700
+
+- name: create app log dir
+  file:
+    dest=/var/log/gatewatch
+    state=directory
+    owner=www-data
+    group=www-data
+    mode=0700
