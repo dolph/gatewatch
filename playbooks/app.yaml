@@ -1,3 +1,82 @@
 - hosts: all
-  roles:
-    - app
+  tasks:
+    - name: install apt packages
+      apt:
+        pkg={{ item }}
+        state=latest
+      with_items:
+        - git
+        - python-virtualenv
+        - python-dev
+        - python-setuptools
+
+    - name: install pip
+      action: easy_install name=pip
+
+    - name: create ssh dir
+      file:
+        path=/root/.ssh
+        state=directory
+
+    - name: install public deploy key
+      copy:
+        src=~/.ssh/deploy.pub
+        dest=/root/.ssh/id_rsa.pub
+
+    - name: install private deploy key
+      copy:
+        src=~/.ssh/deploy
+        dest=/root/.ssh/id_rsa
+
+    - name: install git.dolphm.com known host
+      copy:
+        src=files/known_hosts
+        dest=/root/.ssh/known_hosts
+
+    - name: create virtualenv
+      pip:
+        name={{ item }} state=latest
+        virtualenv=/opt/gatewatch/venv
+      with_items:
+        - setuptools
+        - pip
+
+    - name: install pip packages into venv
+      pip:
+        name={{ item }} state=latest
+        virtualenv=/opt/gatewatch/venv
+        extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
+      with_items:
+        - 'git+ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch#egg=gatewatch'
+
+    - name: create app config dir
+      file:
+        dest=/etc/gatewatch
+        state=directory
+        owner=www-data
+        group=www-data
+        mode=0700
+
+    - name: deploy app config
+      template:
+        src=templates/config.py
+        dest=/etc/gatewatch/gatewatch.conf.py
+        owner=www-data
+        group=www-data
+        mode=0700
+
+    - name: create app log dir
+      file:
+        dest=/var/log/gatewatch
+        state=directory
+        owner=www-data
+        group=www-data
+        mode=0700
+
+    - name: create temp dir
+      file:
+        dest=/tmp/gatewatch
+        state=directory
+        owner=www-data
+        group=www-data
+        mode=0700
