@@ -35,6 +35,19 @@
         src=files/known_hosts
         dest=/root/.ssh/known_hosts
 
+    - name: create directories
+      file:
+        dest={{ item }}
+        state=directory
+        owner=www-data
+        group=www-data
+        mode=0700
+      with_items:
+        - /etc/gatewatch
+        - /opt/gatewatch
+        - /tmp/gatewatch
+        - /var/log/gatewatch
+
     - name: install pip packages into venv
       pip:
         name={{ item }} state=latest
@@ -51,18 +64,6 @@
         extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
       with_items:
         - 'git+ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch#egg=gatewatch'
-
-    - name: create directories
-      file:
-        dest={{ item }}
-        state=directory
-        owner=www-data
-        group=www-data
-        mode=0700
-      with_items:
-        - /etc/gatewatch
-        - /var/log/gatewatch
-        - /tmp/gatewatch
 
     - name: deploy app config
       template:
