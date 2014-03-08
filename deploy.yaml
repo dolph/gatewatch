@@ -5,5 +5,3 @@
     action: ping
 
 - include: playbooks/provision.yaml
-- include: playbooks/wsgi.yaml
-- include: playbooks/http.yaml

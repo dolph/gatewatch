@@ -115,6 +115,54 @@
         - celery
         - celery-beat
 
+    - name: install apt packages
+      apt:
+        pkg={{ item }}
+      with_items:
+        - gunicorn
+        - supervisor
+
+    - name: install pip packages
+      pip:
+        name={{ item }} state=latest
+        virtualenv=/opt/gatewatch/venv/
+      with_items:
+        - gunicorn
+
+    - name: deploy gunicorn config
+      template:
+        src=templates/supervisor.gunicorn.conf
+        dest=/etc/supervisor/conf.d/gunicorn.conf
+      notify:
+        - restart gunicorn
+
+    - name: ensure supervisor is running
+      service:
+        name=supervisor
+        enabled=yes
+        state=started
+
+    - name: ensure gunicorn is started
+      supervisorctl:
+        name=gunicorn
+        state=started
+
+    - name: install apt packages
+      apt:
+        pkg=nginx
+
+    - name: deploy nginx config
+      template:
+        src=templates/nginx.vhost
+        dest=/etc/nginx/sites-enabled/default
+      notify: restart nginx
+
+    - name: ensure nginx is running
+      service:
+        name=nginx
+        enabled=yes
+        state=started
+
   handlers:
     - name: restart celery-beat
       supervisorctl:
@@ -125,3 +173,13 @@
       supervisorctl:
         name=celery
         state=restarted
+
+    - name: restart gunicorn
+      supervisorctl:
+        name=gunicorn
+        state=restarted
+
+    - name: restart nginx
+      service:
+        name=nginx
+        state=reloaded
