@@ -62,18 +62,6 @@
         - celery
         - gunicorn
 
-    - name: fetch app repo
-      git:
-        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
-        dest=/opt/gatewatch/gatewatch
-
-    - name: install app
-      pip:
-        name=/opt/gatewatch/gatewatch
-        state=latest
-        virtualenv=/opt/gatewatch/venv
-        extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
-
     - name: deploy app config
       template:
         src=templates/config.py
@@ -96,15 +84,6 @@
       notify:
         - restart gunicorn
 
-    - name: ensure supervised processes are present
-      supervisorctl:
-        name={{ item }}
-        state=present
-      with_items:
-        - celery
-        - celery-beat
-        - gunicorn
-
     - name: deploy nginx config
       template:
         src=templates/nginx.vhost
@@ -116,6 +95,30 @@
         name=nginx
         enabled=yes
         state=started
+
+    - name: ensure supervised processes are present
+      supervisorctl:
+        name={{ item }}
+        state=present
+      with_items:
+        - celery
+        - celery-beat
+        - gunicorn
+
+    - name: fetch app repo
+      git:
+        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
+        dest=/opt/gatewatch/gatewatch
+
+    - name: install app
+      pip:
+        name=/opt/gatewatch/gatewatch
+        state=latest
+        virtualenv=/opt/gatewatch/venv
+        extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
+      notify:
+        - restart celery
+        - restart gunicorn
 
   handlers:
     - name: restart celery
