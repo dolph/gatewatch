@@ -5,7 +5,6 @@
         pkg={{ item }}
       with_items:
         - git
-        - gunicorn
         - nginx
         - python-dev
         - python-setuptools
