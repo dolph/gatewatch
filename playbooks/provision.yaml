@@ -4,17 +4,14 @@
       apt:
         pkg={{ item }}
       with_items:
-        - redis-server
-
-    - name: install apt packages
-      apt:
-        pkg={{ item }}
-        state=latest
-      with_items:
         - git
-        - python-virtualenv
+        - gunicorn
+        - nginx
         - python-dev
         - python-setuptools
+        - python-virtualenv
+        - redis-server
+        - supervisor
 
     - name: install pip
       action: easy_install name=pip
@@ -87,12 +84,6 @@
         group=www-data
         mode=0700
 
-    - name: install apt packages
-      apt:
-        pkg={{ item }}
-      with_items:
-        - supervisor
-
     - name: install pip packages
       pip:
         name={{ item }} state=latest
@@ -107,13 +98,6 @@
       notify:
         - restart celery
         - restart celery-beat
-
-    - name: install apt packages
-      apt:
-        pkg={{ item }}
-      with_items:
-        - gunicorn
-        - supervisor
 
     - name: install pip packages
       pip:
@@ -143,10 +127,6 @@
         - celery
         - celery-beat
         - gunicorn
-
-    - name: install apt packages
-      apt:
-        pkg=nginx
 
     - name: deploy nginx config
       template:
