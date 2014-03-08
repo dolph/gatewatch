@@ -39,7 +39,10 @@ def data():
         change['number'] = change['url'].split('/')[-1]
 
         review = gerrit.get_review(change['number'])
-        change['subject'] = review['subject']
+        if review is not None:
+            change['subject'] = review['subject']
+        else:
+            change['subject'] = 'Unknown'
 
     d = dict(
         open_reviews=backend.read('open_reviews', default=0),

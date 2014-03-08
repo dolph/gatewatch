@@ -106,7 +106,9 @@ def query(q):
 
 
 def get_review(review_number):
-    return query(review_number).pop()
+    reviews = query(review_number)
+    if reviews:
+        return reviews.pop()
 
 
 @tasks.app.task
