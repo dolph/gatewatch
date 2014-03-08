@@ -5,6 +5,7 @@
         pkg={{ item }}
       with_items:
         - redis-server
+
     - name: install apt packages
       apt:
         pkg={{ item }}
