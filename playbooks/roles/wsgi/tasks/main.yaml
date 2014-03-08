@@ -16,7 +16,8 @@
   template:
     src=supervisor.conf
     dest=/etc/supervisor/conf.d/gunicorn.conf
-  notify: restart gunicorn
+  notify:
+    - restart gunicorn
 
 - name: ensure supervisor is running
   service:
