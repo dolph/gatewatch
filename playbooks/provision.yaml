@@ -108,14 +108,6 @@
         - restart celery
         - restart celery-beat
 
-    - name: ensure celery is started
-      supervisorctl:
-        name={{ item }}
-        state=started
-      with_items:
-        - celery
-        - celery-beat
-
     - name: install apt packages
       apt:
         pkg={{ item }}
@@ -143,10 +135,14 @@
         enabled=yes
         state=started
 
-    - name: ensure gunicorn is started
+    - name: ensure supervised processes are present
       supervisorctl:
-        name=gunicorn
-        state=started
+        name={{ item }}
+        state=present
+      with_items:
+        - celery
+        - celery-beat
+        - gunicorn
 
     - name: install apt packages
       apt:
