@@ -1,9 +1,0 @@
-- name: restart celery-beat
-  supervisorctl:
-    name=celery-beat
-    state=restarted
-
-- name: restart celery
-  supervisorctl:
-    name=celery
-    state=restarted
