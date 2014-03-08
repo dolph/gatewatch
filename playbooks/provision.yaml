@@ -87,12 +87,6 @@
       notify:
         - restart gunicorn
 
-    - name: ensure supervisor is running
-      service:
-        name=supervisor
-        enabled=yes
-        state=started
-
     - name: ensure supervised processes are present
       supervisorctl:
         name={{ item }}
