@@ -54,34 +54,22 @@
       with_items:
         - 'git+ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch#egg=gatewatch'
 
-    - name: create app config dir
+    - name: create directories
       file:
-        dest=/etc/gatewatch
+        dest={{ item }}
         state=directory
         owner=www-data
         group=www-data
         mode=0700
+      with_items:
+        - /etc/gatewatch
+        - /var/log/gatewatch
+        - /tmp/gatewatch
 
     - name: deploy app config
       template:
         src=templates/config.py
         dest=/etc/gatewatch/gatewatch.conf.py
-        owner=www-data
-        group=www-data
-        mode=0700
-
-    - name: create app log dir
-      file:
-        dest=/var/log/gatewatch
-        state=directory
-        owner=www-data
-        group=www-data
-        mode=0700
-
-    - name: create temp dir
-      file:
-        dest=/tmp/gatewatch
-        state=directory
         owner=www-data
         group=www-data
         mode=0700
