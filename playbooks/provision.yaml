@@ -36,15 +36,17 @@
         src=files/known_hosts
         dest=/root/.ssh/known_hosts
 
-    - name: create virtualenv
+    - name: install pip packages into venv
       pip:
         name={{ item }} state=latest
         virtualenv=/opt/gatewatch/venv
       with_items:
         - setuptools
         - pip
+        - celery
+        - gunicorn
 
-    - name: install pip packages into venv
+    - name: install app into venv
       pip:
         name={{ item }} state=latest
         virtualenv=/opt/gatewatch/venv
@@ -84,13 +86,6 @@
         group=www-data
         mode=0700
 
-    - name: install pip packages
-      pip:
-        name={{ item }} state=latest
-        virtualenv=/opt/gatewatch/venv
-      with_items:
-        - celery
-
     - name: deploy celery config
       template:
         src=templates/supervisor.celery.conf
@@ -98,13 +93,6 @@
       notify:
         - restart celery
         - restart celery-beat
-
-    - name: install pip packages
-      pip:
-        name={{ item }} state=latest
-        virtualenv=/opt/gatewatch/venv/
-      with_items:
-        - gunicorn
 
     - name: deploy gunicorn config
       template:
