@@ -102,7 +102,7 @@
 
     - name: deploy celery config
       template:
-        src=supervisor.celery.conf
+        src=templates/supervisor.celery.conf
         dest=/etc/supervisor/conf.d/celery.conf
       notify:
         - restart celery
