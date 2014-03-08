@@ -57,13 +57,17 @@
         - celery
         - gunicorn
 
-    - name: install app into venv
+    - name: fetch app repo
+      git:
+        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
+        dest=/opt/gatewatch/gatewatch
+
+    - name: install app
       pip:
-        name={{ item }} state=latest
+        name=/opt/gatewatch/gatewatch
+        state=latest
         virtualenv=/opt/gatewatch/venv
         extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
-      with_items:
-        - 'git+ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch#egg=gatewatch'
 
     - name: deploy app config
       template:
