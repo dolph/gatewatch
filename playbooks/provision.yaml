@@ -17,7 +17,8 @@
         - supervisor
 
     - name: install pip
-      action: easy_install name=pip
+      easy_install:
+        name=pip
 
     - name: create ssh dir
       file:
