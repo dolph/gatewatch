@@ -1,3 +1,38 @@
 - hosts: all
-  roles:
-    - wsgi
+  tasks:
+    - name: install apt packages
+      apt:
+        pkg={{ item }}
+      with_items:
+        - gunicorn
+        - supervisor
+
+    - name: install pip packages
+      pip:
+        name={{ item }} state=latest
+        virtualenv=/opt/gatewatch/venv/
+      with_items:
+        - gunicorn
+
+    - name: deploy gunicorn config
+      template:
+        src=templates/supervisor.gunicorn.conf
+        dest=/etc/supervisor/conf.d/gunicorn.conf
+      notify:
+        - restart gunicorn
+
+    - name: ensure supervisor is running
+      service:
+        name=supervisor
+        enabled=yes
+        state=started
+
+    - name: ensure gunicorn is started
+      supervisorctl:
+        name=gunicorn
+        state=started
+  handlers:
+    - name: restart gunicorn
+      supervisorctl:
+        name=gunicorn
+        state=restarted
