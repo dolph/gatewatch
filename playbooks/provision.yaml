@@ -80,7 +80,6 @@
         dest=/etc/supervisor/conf.d/celery.conf
       notify:
         - restart celery
-        - restart celery-beat
 
     - name: deploy gunicorn config
       template:
@@ -117,15 +116,13 @@
         state=started
 
   handlers:
-    - name: restart celery-beat
-      supervisorctl:
-        name=celery-beat
-        state=restarted
-
     - name: restart celery
       supervisorctl:
-        name=celery
+        name={{ item }}
         state=restarted
+      with_items:
+        - celery
+        - celery-beat
 
     - name: restart gunicorn
       supervisorctl:
