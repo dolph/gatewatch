@@ -1,5 +1,10 @@
 - hosts: all
   tasks:
+    - name: deploy authorized key to root
+      authorized_key:
+        user=root
+        key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
     - name: update apt cache
       apt:
         update_cache=yes
