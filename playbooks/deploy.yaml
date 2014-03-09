@@ -1,0 +1,27 @@
+- hosts: all
+  tasks:
+    - name: fetch app repo
+      git:
+        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
+        dest=/opt/gatewatch/gatewatch
+      notify:
+        - restart supervised processes
+
+    - name: install app
+      pip:
+        name=/opt/gatewatch/gatewatch
+        state=latest
+        virtualenv=/opt/gatewatch/venv
+        extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
+      notify:
+        - restart supervised processes
+
+  handlers:
+    - name: restart supervised processes
+      supervisorctl:
+        name={{ item }}
+        state=restarted
+      with_items:
+        - gunicorn
+        - celery
+        - celery-beat

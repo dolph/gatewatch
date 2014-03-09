@@ -74,27 +74,17 @@
       template:
         src=templates/supervisor.celery.conf
         dest=/etc/supervisor/conf.d/celery.conf
-      notify:
-        - restart celery
 
     - name: deploy gunicorn config
       template:
         src=templates/supervisor.gunicorn.conf
         dest=/etc/supervisor/conf.d/gunicorn.conf
-      notify:
-        - restart gunicorn
 
     - name: deploy nginx config
       template:
         src=templates/nginx.vhost
         dest=/etc/nginx/sites-enabled/default
       notify: restart nginx
-
-    - name: ensure nginx is running
-      service:
-        name=nginx
-        enabled=yes
-        state=started
 
     - name: ensure supervised processes are present
       supervisorctl:
@@ -105,36 +95,16 @@
         - celery-beat
         - gunicorn
 
-    - name: fetch app repo
-      git:
-        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
-        dest=/opt/gatewatch/gatewatch
-
-    - name: install app
-      pip:
-        name=/opt/gatewatch/gatewatch
-        state=latest
-        virtualenv=/opt/gatewatch/venv
-        extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
-      notify:
-        - restart celery
-        - restart gunicorn
+    - name: ensure nginx is running
+      service:
+        name=nginx
+        enabled=yes
+        state=started
 
   handlers:
-    - name: restart celery
-      supervisorctl:
-        name={{ item }}
-        state=restarted
-      with_items:
-        - celery
-        - celery-beat
-
-    - name: restart gunicorn
-      supervisorctl:
-        name=gunicorn
-        state=restarted
-
     - name: restart nginx
       service:
         name=nginx
         state=reloaded
+
+- include: deploy.yaml

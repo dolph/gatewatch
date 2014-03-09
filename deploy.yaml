@@ -1,7 +1,0 @@
-- name: deploy gatewatch
-  hosts: all
-  tasks:
-  - name: check connectivity
-    action: ping
-
-- include: playbooks/provision.yaml
