@@ -1,3 +1,5 @@
+import os
+
 import flask
 
 
@@ -6,8 +8,9 @@ app = flask.Flask(__name__)
 # start with a default configuration
 app.config.from_object('gatewatch.config')
 
-# override defaults with instance-specific configuration
-app.config.from_pyfile('/etc/gatewatch/gatewatch.conf.py', silent=True)
+# override defaults with custom configuration
+conf_path = os.path.expanduser('~/gatewatch.conf.py')
+app.config.from_pyfile(conf_path, silent=True)
 
 # enable logging in production
 if not app.debug:
