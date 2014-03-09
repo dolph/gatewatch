@@ -33,7 +33,12 @@
                         $('#failed_merges').html('<span class="muted">0</span>');
                     }
 
-                    $('#next_milestone').html(data.next_milestone[0] + ' <small>' + data.next_milestone[1] + '</small>');
+                    var next_milestone = data.next_milestone;
+                    if (next_milestone[0] == 0) {
+                        $('#next_milestone').html('Anytime');
+                    } else {
+                        $('#next_milestone').html(next_milestone[0] + ' <small>' + next_milestone[1] + '</small>');
+                    }
 
                     var s = '';
                     for (var i = 0; i < data.changes.length; i++) {
