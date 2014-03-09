@@ -45,23 +45,26 @@
         src=files/known_hosts
         dest=/root/.ssh/known_hosts
 
+    - name: create home dir for gatewatch user with ssh key
+      user:
+        name=gatewatch
+        createhome=yes
+        generate_ssh_key=yes
+
     - name: create directories
       file:
-        dest={{ item }}
+        dest="{{ item }}"
         state=directory
-        owner=www-data
-        group=www-data
+        owner=gatewatch
+        group=gatewatch
         mode=0700
       with_items:
-        - /etc/gatewatch
-        - /opt/gatewatch
-        - /tmp/gatewatch
-        - /var/log/gatewatch
+        - /home/gatewatch/log
 
     - name: install pip packages into venv
       pip:
         name={{ item }} state=latest
-        virtualenv=/opt/gatewatch/venv
+        virtualenv=/home/gatewatch/venv
       with_items:
         - pip
         - celery
@@ -70,9 +73,9 @@
     - name: deploy app config
       template:
         src=templates/config.py
-        dest=/etc/gatewatch/gatewatch.conf.py
-        owner=www-data
-        group=www-data
+        dest=/home/gatewatch/gatewatch.conf.py
+        owner=gatewatch
+        group=gatewatch
         mode=0700
 
     - name: deploy celery config
@@ -92,13 +95,7 @@
       notify: restart nginx
 
     - name: ensure supervised processes are present
-      supervisorctl:
-        name={{ item }}
-        state=present
-      with_items:
-        - celery
-        - celery-beat
-        - gunicorn
+      shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
 
     - name: ensure nginx is running
       service:
