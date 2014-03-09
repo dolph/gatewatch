@@ -22,15 +22,12 @@ from gatewatch import cache
 from gatewatch import tasks
 
 
-DEFAULT_GERRIT_HOST = 'review.openstack.org'
-DEFAULT_GERRIT_PORT = 29418
-
 # used for tracking the last known state of each change
 COMMENTS = {}
 STATUS = {}
 
 CLIENT = None
-CLIENT_KWARGS = dict(user='dolph')
+CLIENT_KWARGS = dict()
 
 
 class Disconnected(Exception):
@@ -42,9 +39,9 @@ def get_client(**kwargs):
 
     # remember client configuration
     CLIENT_KWARGS.update(kwargs)
-    CLIENT_KWARGS.setdefault('host', DEFAULT_GERRIT_HOST)
-    CLIENT_KWARGS.setdefault('port', DEFAULT_GERRIT_PORT)
-    CLIENT_KWARGS.setdefault('user', getpass.getuser())
+    CLIENT_KWARGS.setdefault('host', app.config.get('GERRIT_HOST'))
+    CLIENT_KWARGS.setdefault('port', app.config.get('GERRIT_PORT'))
+    CLIENT_KWARGS.setdefault('user', app.config.get('GERRIT_USERNAME'))
 
     def ssh_client(host, port, user=None, key=None):
         client = paramiko.SSHClient()

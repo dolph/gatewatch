@@ -1,3 +1,4 @@
+import getpass
 import uuid
 
 
@@ -15,3 +16,8 @@ REDIS_DB = 1
 
 # put the task broker on a different DB
 BROKER_URL = 'redis://%s:%s/%s' % (REDIS_HOST, REDIS_PORT, 0)
+
+# configure gerrit authentication
+GERRIT_HOST = 'review.openstack.org'
+GERRIT_PORT = 29418
+GERRIT_USERNAME = getpass.getuser()
