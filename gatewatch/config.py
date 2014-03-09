@@ -21,3 +21,4 @@ BROKER_URL = 'redis://%s:%s/%s' % (REDIS_HOST, REDIS_PORT, 0)
 GERRIT_HOST = 'review.openstack.org'
 GERRIT_PORT = 29418
 GERRIT_USERNAME = getpass.getuser()
+GERRIT_KEY = None

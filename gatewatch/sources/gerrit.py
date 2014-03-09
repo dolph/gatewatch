@@ -42,6 +42,7 @@ def get_client(**kwargs):
     CLIENT_KWARGS.setdefault('host', app.config.get('GERRIT_HOST'))
     CLIENT_KWARGS.setdefault('port', app.config.get('GERRIT_PORT'))
     CLIENT_KWARGS.setdefault('user', app.config.get('GERRIT_USERNAME'))
+    CLIENT_KWARGS.setdefault('key', app.config.get('GERRIT_KEY'))
 
     def ssh_client(host, port, user=None, key=None):
         client = paramiko.SSHClient()
