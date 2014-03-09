@@ -6,8 +6,6 @@ def human_readable_duration(seconds):
     """
     if round(seconds / 60. / 60. / 24. / 7. / 52.) > 2:
         t = (seconds / 60. / 60. / 24. / 7. / 52., 'yrs')
-    elif round(seconds / 60. / 60. / 24. / 7. / (52. / 12.)) > 2:
-        t = (seconds / 60. / 60. / 24. / 7. / (52. / 12.), 'months')
     elif round(seconds / 60. / 60. / 24. / 7.) > 2:
         t = (seconds / 60. / 60. / 24. / 7., 'wks')
     elif round(seconds / 60. / 60. / 24.) > 2:
