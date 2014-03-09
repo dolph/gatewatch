@@ -19,9 +19,9 @@
                     var gate_duration = data.gate_duration;
                     if (gate_duration[0] == 0) {
                         $('#gate_duration').html('<span class="text-success">Empty</span>');
-                    } else if(gate_duration[1].startswith("second") || gate_duration[1].startswith("minute") || gate_duration[1].startswith("hour") && gate_duration[0] <= 6) {
+                    } else if(gate_duration[1].startswith("sec") || gate_duration[1].startswith("min") || gate_duration[1].startswith("hr") && gate_duration[0] <= 6) {
                         $('#gate_duration').html('<span class="text-success">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
-                    } else if (gate_duration[1].startswith("hour")) {
+                    } else if (gate_duration[1].startswith("hr")) {
                         $('#gate_duration').html('<span class="text-warning">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
                     } else {
                         $('#gate_duration').html('<span class="text-error">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
