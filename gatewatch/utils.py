@@ -5,19 +5,19 @@ def human_readable_duration(seconds):
 
     """
     if round(seconds / 60. / 60. / 24. / 7. / 52.) > 2:
-        t = (seconds / 60. / 60. / 24. / 7. / 52., 'years')
+        t = (seconds / 60. / 60. / 24. / 7. / 52., 'yrs')
     elif round(seconds / 60. / 60. / 24. / 7. / (52. / 12.)) > 2:
         t = (seconds / 60. / 60. / 24. / 7. / (52. / 12.), 'months')
     elif round(seconds / 60. / 60. / 24. / 7.) > 2:
-        t = (seconds / 60. / 60. / 24. / 7., 'weeks')
+        t = (seconds / 60. / 60. / 24. / 7., 'wks')
     elif round(seconds / 60. / 60. / 24.) > 2:
         t = (seconds / 60. / 60. / 24., 'days')
     elif round(seconds / 60. / 60.) > 2:
-        t = (seconds / 60. / 60., 'hours')
+        t = (seconds / 60. / 60., 'hrs')
     elif round(seconds / 60.) > 2:
-        t = (seconds / 60., 'minutes')
+        t = (seconds / 60., 'mins')
     else:
-        t = (seconds, 'seconds')
+        t = (seconds, 'secs')
 
     # convert to an int
     value = int(round(t[0]))
