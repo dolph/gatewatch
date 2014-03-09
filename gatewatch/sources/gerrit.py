@@ -59,7 +59,7 @@ def get_client(**kwargs):
 
     if CLIENT is None:
         # generate a new client
-        app.logger.INFO('Creating gerrit client using: %s', CLIENT_KWARGS)
+        app.logger.info('Creating gerrit client using: %s', CLIENT_KWARGS)
         CLIENT = ssh_client(**CLIENT_KWARGS)
 
     return CLIENT
