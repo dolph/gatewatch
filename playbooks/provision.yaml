@@ -71,14 +71,16 @@
         - celery
         - gunicorn
 
+- hosts: all
+  tasks:
     - name: deploy app config
       template:
         src=templates/config.py
-        dest=~/gatewatch.conf.py
+        dest=/etc/gatewatch.conf.py
+        owner=gatewatch
+        group=gatewatch
         mode=0700
 
-- hosts: all
-  tasks:
     - name: deploy celery config
       template:
         src=templates/supervisor.celery.conf
