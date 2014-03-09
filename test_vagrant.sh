@@ -5,5 +5,5 @@ time vagrant up
 curl -sL -w "%{http_code}\\n" http://192.168.111.222/data -o /dev/null | grep -q "200"
 time vagrant provision
 curl -sL -w "%{http_code}\\n" http://192.168.111.222/data -o /dev/null | grep -q "200"
-time ansible-playbook -i "192.168.111.222," --user=root playbooks/deploy.yaml
+time ansible-playbook -i "192.168.111.222," --user=vagrant --sudo playbooks/deploy.yaml
 curl -sL -w "%{http_code}\\n" http://192.168.111.222/data -o /dev/null | grep -q "200"

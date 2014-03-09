@@ -1,22 +1,21 @@
 - hosts: all
+  sudo: True
+  sudo_user: gatewatch
   tasks:
     - name: fetch app repo
       git:
         repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
-        dest=/home/gatewatch/gatewatch
-      notify:
-        - restart supervised processes
+        dest=~/gatewatch
 
     - name: install app
       pip:
-        name=/home/gatewatch/gatewatch
+        name=~/gatewatch
         state=latest
-        virtualenv=/home/gatewatch/venv
+        virtualenv=~/venv
         extra_args='--allow-external lazr.authentication --allow-unverified lazr.authentication'
-      notify:
-        - restart supervised processes
 
-  handlers:
+- hosts: all
+  tasks:
     - name: restart supervised processes
       supervisorctl:
         name={{ item }}
