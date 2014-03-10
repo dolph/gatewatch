@@ -4,7 +4,7 @@
   tasks:
     - name: fetch app repo
       git:
-        repo=ssh://dolph@git.dolphm.com/home/dolph/repos/gatewatch
+        repo=https://github.com/dolph/gatewatch.git
         dest=~/gatewatch
 
     - name: install app
