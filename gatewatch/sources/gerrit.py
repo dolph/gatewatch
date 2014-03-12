@@ -30,10 +30,6 @@ CLIENT = None
 CLIENT_KWARGS = dict()
 
 
-class Disconnected(Exception):
-    pass
-
-
 def get_client(**kwargs):
     global CLIENT
 
@@ -74,7 +70,8 @@ def ssh_client_command(command):
         # throw the client away, we'll build a new one next time
         CLIENT = None
 
-        raise Disconnected()
+        # retry
+        stdin, stdout, stderr = get_client().exec_command(command)
 
     return stdin, stdout, stderr
 
