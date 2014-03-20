@@ -34,7 +34,7 @@
                     }
 
                     var next_milestone = data.next_milestone;
-                    if (next_milestone[0] == 0) {
+                    if (next_milestone[0] <= 0) {
                         $('#next_milestone').html('Anytime');
                     } else {
                         $('#next_milestone').html(next_milestone[0] + ' <small>' + next_milestone[1] + '</small>');
