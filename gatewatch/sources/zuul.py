@@ -37,16 +37,21 @@ def get_gate_duration():
     changes = list_gating_changes()
     if not changes:
         return 0
-    top_change = changes[0]
 
-    # calculate number of seconds since the change was enqueued
-    enqueued_timestamp = top_change['enqueue_time'] / 1000.
-    enqueued_dt = datetime.datetime.fromtimestamp(enqueued_timestamp)
-    seconds = (datetime.datetime.now() - enqueued_dt).seconds
+    durations = []
+    for change in changes:
+        # calculate number of seconds since the change was enqueued
+        enqueued_timestamp = change['enqueue_time'] / 1000.
+        enqueued_dt = datetime.datetime.fromtimestamp(enqueued_timestamp)
+        seconds = (datetime.datetime.now() - enqueued_dt).seconds
 
-    # if the gate has an estimate for when all jobs are complete, add that
-    if top_change['remaining_time'] is not None:
-        seconds = seconds + top_change['remaining_time'] / 1000.
+        # if the gate has an estimate for when all jobs are complete, add that
+        if change['remaining_time'] is not None:
+            seconds = seconds + change['remaining_time'] / 1000.
+
+        durations.append(seconds)
+
+    seconds = max(durations)
 
     backend.write(gate_duration=seconds)
 
