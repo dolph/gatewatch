@@ -18,7 +18,7 @@
 
                     var gate_duration = data.gate_duration;
                     if (gate_duration[0] == 0) {
-                        $('#gate_duration').html('<span class="text-success">Empty</span>');
+                        $('#gate_duration').html('<span class="text-success">empty</span>');
                     } else if(gate_duration[1].startswith("sec") || gate_duration[1].startswith("min") || gate_duration[1].startswith("hr") && gate_duration[0] <= 6) {
                         $('#gate_duration').html('<span class="text-success">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
                     } else if (gate_duration[1].startswith("hr")) {
@@ -35,7 +35,7 @@
 
                     var next_milestone = data.next_milestone;
                     if (next_milestone[0] <= 0) {
-                        $('#next_milestone').html('Anytime');
+                        $('#next_milestone').html('anytime');
                     } else {
                         $('#next_milestone').html(next_milestone[0] + ' <small>' + next_milestone[1] + '</small>');
                     }
