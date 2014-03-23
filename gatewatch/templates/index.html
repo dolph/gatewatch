@@ -1,8 +1,7 @@
 {% extends "layout.html" %}
 {% block script %}
     <script type="application/javascript">
-        var WEEK_GRAPH_URL = "http://graphite.openstack.org/render/?from=-7days&width=940&height=80&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27999999%27)&bgcolor=000000";
-        var DAY_GRAPH_URL = "http://graphite.openstack.org/render/?from=-24hours&width=940&height=80&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27999999%27)&bgcolor=000000";
+        var GRAPH_URL = "http://graphite.openstack.org/render/?from=-7days&width=940&height=80&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27999999%27)&bgcolor=000000";
 
         // add a startswith function to all strings
         // http://stackoverflow.com/questions/646628
@@ -51,8 +50,7 @@
                     }
                     $('#changes').html(s);
 
-                    $('#week-graph').attr('src', WEEK_GRAPH_URL + '&' + new Date().getTime());
-                    $('#day-graph').attr('src', DAY_GRAPH_URL + '&' + new Date().getTime());
+                    $('#graph').attr('src', WEEK_GRAPH_URL + '&' + new Date().getTime());
                 }
             );
             setTimeout("loadData()", 30 * 1000);
@@ -63,14 +61,7 @@
 {% block body %}
     <div class="row">
         <div class="span12">
-            <h4>Weekly Gate Load</h4>
-            <img id="week-graph" style="width: 940px; height: 80px;" />
-        </div>
-    </div>
-    <div class="row">
-        <div class="span12">
-            <h4>Daily Gate Load</h4>
-            <img id="day-graph" style="width: 940px; height: 80px;" />
+            <img id="graph" style="width: 940px; height: 80px;" />
         </div>
     </div>
     <div class="row">
