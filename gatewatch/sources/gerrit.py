@@ -96,6 +96,8 @@ def query(q):
 
         for line in stdout:
             reviews.append(json.loads(line))
+        if not reviews:
+            raise Exception(stderr.read())
         if reviews[-1]['rowCount'] != limit:
             break
 
