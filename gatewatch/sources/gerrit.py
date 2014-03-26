@@ -13,6 +13,7 @@
 import getpass
 import json
 import socket
+import time
 
 import paramiko
 
@@ -145,18 +146,18 @@ def count_failed_merges():
 @tasks.app.task
 def recently_merged():
     q = [
-        '(',
+        'status:merged',
+        'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
         'OR project:openstack/identity-api',
-        ')',
-        'AND -age:24hours']
+        ')']
     reviews = query(' '.join(q))
 
-    # including 'status:merged' above seems to cause gerrit to hang forever,
-    # but it's easy to do that part of the query offline in exchange for a much
-    # larger payload
-    reviews = [x for x in reviews if x['status'] == 'MERGED']
+    # including 'status:merged' with a negative 'age' seems to cause gerrit to
+    # hang forever, so we need to do one or the other offline
+    yesterday = time.time() - 60 * 60 * 24
+    reviews = [x for x in reviews if x['lastUpdated'] > yesterday]
 
     reviews = reversed(reviews)
     backend.write(recently_merged=reviews)
