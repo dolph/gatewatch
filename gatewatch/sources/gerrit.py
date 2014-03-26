@@ -161,6 +161,6 @@ def recently_merged():
     yesterday = time.time() - 60 * 60 * 24
     reviews = [x for x in reviews if x['lastUpdated'] > yesterday]
 
-    reviews = reversed(reviews)
+    reviews = list(reversed(reviews))
     backend.write(recently_merged=reviews)
     return reviews
