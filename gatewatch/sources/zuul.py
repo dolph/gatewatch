@@ -79,6 +79,7 @@ def _list_changes_to_projects(projects, queued_changes):
 
         # calculate the estimated time until a patch is merged
         eta = int(round(change['enqueue_time'] / 1000. + gate_duration - now))
+        eta = eta if eta > 0 else 0
         changes.append(dict(
             url=change['url'],
             eta=eta))
