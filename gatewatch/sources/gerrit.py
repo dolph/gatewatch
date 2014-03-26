@@ -13,7 +13,6 @@
 import getpass
 import json
 import socket
-import time
 
 import paramiko
 
@@ -26,9 +25,6 @@ from gatewatch import tasks
 # used for tracking the last known state of each change
 COMMENTS = {}
 STATUS = {}
-
-# number of seconds old to consider as "recent" changes
-RECENT_DURATION = 60 * 60 * 24
 
 CLIENT = None
 CLIENT_KWARGS = dict()
@@ -149,15 +145,19 @@ def count_failed_merges():
 @tasks.app.task
 def recently_merged():
     q = [
-        'status:merged',
-        'AND (',
+        '(',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
         'OR project:openstack/identity-api',
-        ')']
+        ')',
+        'AND -age:24hours']
     reviews = query(' '.join(q))
-    recently = time.time() - RECENT_DURATION
-    reviews = [x for x in reviews if x['lastUpdated'] > recently]
+
+    # including 'status:merged' above seems to cause gerrit to hang forever,
+    # but it's easy to do that part of the query offline in exchange for a much
+    # larger payload
+    reviews = [x for x in reviews if x['status'] == 'MERGED']
+
     reviews = reversed(reviews)
     backend.write(recently_merged=reviews)
     return reviews
