@@ -23,6 +23,8 @@ div.row {
 }
 .table-condensed td {
     border-top: 1px solid #555;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .table-condensed h3 {
     margin: 0;
