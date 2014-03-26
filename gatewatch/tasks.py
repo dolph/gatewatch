@@ -23,6 +23,10 @@ app.conf.update(
             'task': 'gatewatch.sources.gerrit.count_failed_merges',
             'schedule': datetime.timedelta(minutes=15),
         },
+        'get-recently-merged-changes': {
+            'task': 'gatewatch.sources.gerrit.recently_merged',
+            'schedule': datetime.timedelta(minutes=1),
+        },
         'get-gate-duration': {
             'task': 'gatewatch.sources.zuul.get_gate_duration',
             'schedule': datetime.timedelta(minutes=5),
