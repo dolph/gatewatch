@@ -24,3 +24,6 @@ div.row {
 .table-condensed td {
     border-top: 1px solid #555;
 }
+.table-condensed h3 {
+    margin: 0;
+}
