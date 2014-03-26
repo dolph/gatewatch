@@ -21,8 +21,12 @@ a, a:hover {
 div.row {
     padding-top: 20px;
 }
-.table-condensed td {
+.table-condensed {
     border-top: 1px solid #555;
+    overflow: hidden;
+}
+.table-condensed td {
+    border-top: none;
     white-space: nowrap;
     overflow: hidden;
 }

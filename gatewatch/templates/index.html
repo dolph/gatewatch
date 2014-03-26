@@ -56,9 +56,9 @@
                         if(change['merged']) {
                             s = s + '<td><h3 class="text-right"><small>merged</small></h3></td>'
                         } else if (change['eta'][0] != 0) {
-                            s = s + '<td><h3>' + change['eta'][0] + ' <small>' + change['eta'][1] + '</small></h3></td>';
+                            s = s + '<td><h3 class="text-right">' + change['eta'][0] + ' <small>' + change['eta'][1] + '</small></h3></td>';
                         } else {
-                            s = s + '<td><h3>now</h3></td>';
+                            s = s + '<td><h3 class="text-right">now</h3></td>';
                         }
                         s = s + '<td><h3><a href="' + change['url'] + '" class="' + cls + '">' + change['number'] + ': ' + change['subject'] + '</a></h3></td>';
                         s = s + '</tr>';
