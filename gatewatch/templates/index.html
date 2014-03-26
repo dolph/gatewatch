@@ -43,9 +43,19 @@
                     var s = '';
                     for (var i = 0; i < data.changes.length; i++) {
                         var change = data.changes[i];
+
+                        var cls = '';
+                        if(!change['gate']) {
+                            cls = 'muted'
+                        }
+
                         s = s + '<tr>';
-                        s = s + '<td><h3>' + change['eta'][0] + ' <small>' + change['eta'][1] + '</small></h3></td>';
-                        s = s + '<td><h3><a href="' + change['url'] + '">' + change['subject'] + '</a></h3></td>';
+                        if(change['eta'][0] != 0) {
+                            s = s + '<td><h3>' + change['eta'][0] + ' <small>' + change['eta'][1] + '</small></h3></td>';
+                        } else {
+                            s = s + '<td><h3>now</h3></td>';
+                        }
+                        s = s + '<td><h3><a href="' + change['url'] + '" class="' + cls + '">' + change['number'] + ': ' + change['subject'] + '</a></h3></td>';
                         s = s + '</tr>';
                     }
                     $('#changes').html(s);

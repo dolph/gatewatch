@@ -33,10 +33,19 @@ def data():
     else:
         next_milestone = 0
 
-    changes = backend.read('gating_changes', default=[])
+    checking_changes = backend.read('checking_changes', default=[])
+    gating_changes = backend.read('gating_changes', default=[])
+    for change in gating_changes:
+        change['gate'] = True
+
+    # combine the two sets of changes
+    changes = gating_changes + checking_changes
+    changes = sorted(changes, key=lambda x: x['eta'])
+
     for change in changes:
         change['eta'] = utils.human_readable_duration(change['eta'])
         change['number'] = change['url'].split('/')[-1]
+        change.setdefault('gate', False)
 
         review = gerrit.get_review(change['number'])
         if review is not None:
