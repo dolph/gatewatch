@@ -17,7 +17,7 @@ app.conf.update(
     CELERYBEAT_SCHEDULE={
         'count-open-reviews': {
             'task': 'gatewatch.sources.gerrit.count_open_reviews',
-            'schedule': datetime.timedelta(minutes=5),
+            'schedule': datetime.timedelta(minutes=3),
         },
         'count-failed-merges': {
             'task': 'gatewatch.sources.gerrit.count_failed_merges',
@@ -33,12 +33,12 @@ app.conf.update(
         },
         'get-gating-changes': {
             'task': 'gatewatch.sources.zuul.list_gating_changes_to_projects',
-            'schedule': datetime.timedelta(minutes=3),
+            'schedule': datetime.timedelta(minutes=1),
             'args': (PROJECTS,),
         },
         'get-checking-changes': {
             'task': 'gatewatch.sources.zuul.list_checking_changes_to_projects',
-            'schedule': datetime.timedelta(minutes=3),
+            'schedule': datetime.timedelta(minutes=1),
             'args': (PROJECTS,),
         },
         'next-milestone-date': {
