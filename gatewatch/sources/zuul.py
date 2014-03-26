@@ -17,17 +17,26 @@ def get_zuul_status():
     return r.json()
 
 
-@cache.cache_on_arguments()
-def list_gating_changes():
+def _list_changes(pipeline_name):
     status = get_zuul_status()
-    gate = [x for x in status['pipelines'] if x['name'] == 'gate'].pop()
-    queue = [x for x in gate['change_queues'] if PROJECT in x['name']].pop()
+    pipe = [x for x in status['pipelines'] if x['name'] == pipeline_name].pop()
+    queue = [x for x in pipe['change_queues'] if PROJECT in x['name']].pop()
 
     changes = []
     for head in queue['heads']:
         for change in head:
             changes.append(change)
     return changes
+
+
+@cache.cache_on_arguments()
+def list_gating_changes():
+    return _list_changes('gate')
+
+
+@cache.cache_on_arguments()
+def list_checking_changes():
+    return _list_changes('check')
 
 
 @tasks.app.task
@@ -58,14 +67,12 @@ def get_gate_duration():
     return seconds
 
 
-@tasks.app.task
-def list_gating_changes_to_projects(projects):
-    """Returns the number of seconds required to land a change."""
+def _list_changes_to_projects(projects, queued_changes):
     gate_duration = get_gate_duration()
     now = time.time()
 
     changes = []
-    for change in list_gating_changes():
+    for change in queued_changes:
         # skip changes to other projects
         if change['project'] not in projects:
             continue
@@ -76,6 +83,20 @@ def list_gating_changes_to_projects(projects):
             url=change['url'],
             eta=eta))
 
-    backend.write(gating_changes=changes)
+    return changes
 
+
+@tasks.app.task
+def list_gating_changes_to_projects(projects):
+    """Returns the number of seconds required to land a change."""
+    changes = _list_changes_to_projects(projects, list_gating_changes())
+    backend.write(gating_changes=changes)
+    return changes
+
+
+@tasks.app.task
+def list_checking_changes_to_projects(projects):
+    """Returns the number of seconds required to approve a change."""
+    changes = _list_changes_to_projects(projects, list_checking_changes())
+    backend.write(checking_changes=changes)
     return changes
