@@ -32,6 +32,11 @@ app.conf.update(
             'schedule': datetime.timedelta(minutes=3),
             'args': (PROJECTS,),
         },
+        'get-checking-changes': {
+            'task': 'gatewatch.sources.zuul.list_checking_changes_to_projects',
+            'schedule': datetime.timedelta(minutes=3),
+            'args': (PROJECTS,),
+        },
         'next-milestone-date': {
             'task': 'gatewatch.sources.launchpad.next_milestone_date',
             'schedule': datetime.timedelta(hours=6),
