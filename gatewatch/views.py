@@ -33,19 +33,29 @@ def data():
     else:
         next_milestone = 0
 
+    recently_merged = backend.read('recently_merged', default=[])
+    import time
+    for change in recently_merged:
+        change['merged'] = True
+        change.setdefault('eta', 0) # time.time() - change['lastUpdated'])
+
+    # truncate the list to only show the last few merges
+    # recently_merged = recently_merged[-10:]
+
     checking_changes = backend.read('checking_changes', default=[])
     gating_changes = backend.read('gating_changes', default=[])
     for change in gating_changes:
         change['gate'] = True
 
-    # combine the two sets of changes
-    changes = gating_changes + checking_changes
+    # combine the change sets
+    changes = recently_merged + gating_changes + checking_changes
     changes = sorted(changes, key=lambda x: x['eta'])
 
     for change in changes:
         change['eta'] = utils.human_readable_duration(change['eta'])
         change['number'] = change['url'].split('/')[-1]
         change.setdefault('gate', False)
+        change.setdefault('merged', False)
 
         review = gerrit.get_review(change['number'])
         if review is not None:
