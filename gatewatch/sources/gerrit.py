@@ -67,7 +67,7 @@ def ssh_client_command(command):
 
     try:
         stdin, stdout, stderr = get_client().exec_command(command)
-    except socket.error:
+    except (paramiko.SSHException, socket.error):
         # throw the client away, we'll build a new one next time
         CLIENT = None
 
