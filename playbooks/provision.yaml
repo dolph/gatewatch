@@ -38,6 +38,14 @@
         - ~/log
         - ~/.ssh
 
+    - name: deploy ssh known hosts
+      copy:
+        src=files/known_hosts
+        dest=/home/gatewatch/.ssh/known_hosts
+        owner=gatewatch
+        group=gatewatch
+        mode=0644
+
     - name: install pip packages into venv
       sudo_user: gatewatch
       pip:
