@@ -20,7 +20,12 @@ def get_zuul_status():
 def _list_changes(pipeline_name):
     status = get_zuul_status()
     pipe = [x for x in status['pipelines'] if x['name'] == pipeline_name].pop()
-    queue = [x for x in pipe['change_queues'] if PROJECT in x['name']].pop()
+    for queue in pipe['change_queues']:
+        # queue names are a list of comma-separated projects
+        projects = [x.strip() for x in queue['name'].split(',')]
+        if PROJECT in projects:
+            # use scope fall through to select a queue
+            break
 
     changes = []
     for head in queue['heads']:
