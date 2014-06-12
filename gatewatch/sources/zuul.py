@@ -85,12 +85,14 @@ def get_gate_duration():
     return seconds
 
 
-def _list_changes_to_projects(projects, queued_changes):
+@tasks.app.task
+def list_gating_changes_to_projects(projects):
+    """Returns the number of seconds required to land a change."""
     gate_duration = get_gate_duration()
     now = time.time()
 
     changes = []
-    for change in queued_changes:
+    for change in list_gating_changes():
         # skip changes to other projects
         if change['project'] not in projects:
             continue
@@ -102,13 +104,6 @@ def _list_changes_to_projects(projects, queued_changes):
             url=change['url'],
             eta=eta))
 
-    return changes
-
-
-@tasks.app.task
-def list_gating_changes_to_projects(projects):
-    """Returns the number of seconds required to land a change."""
-    changes = _list_changes_to_projects(projects, list_gating_changes())
     backend.write(gating_changes=changes)
     return changes
 
@@ -116,6 +111,18 @@ def list_gating_changes_to_projects(projects):
 @tasks.app.task
 def list_checking_changes_to_projects(projects):
     """Returns the number of seconds required to approve a change."""
-    changes = _list_changes_to_projects(projects, list_checking_changes())
+    changes = []
+    for change in list_checking_changes():
+        # skip changes to other projects
+        if change['project'] not in projects:
+            continue
+
+        # calculate the estimated time until a patch is merged
+        eta = int(round(change['remaining_time'] / 1000.))
+        eta = eta if eta > 0 else 0
+        changes.append(dict(
+            url=change['url'],
+            eta=eta))
+
     backend.write(checking_changes=changes)
     return changes
