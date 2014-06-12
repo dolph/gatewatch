@@ -32,12 +32,29 @@ def _list_changes(pipeline_name):
 
 @cache.cache_on_arguments()
 def list_gating_changes():
-    return _list_changes('gate')
+    status = get_zuul_status()
+    pipe = [x for x in status['pipelines'] if x['name'] == 'gate'].pop()
+    queue = [x for x in pipe['change_queues']
+             if x['name'] == 'integrated'].pop()
+
+    changes = []
+    for head in queue['heads']:
+        for change in head:
+            changes.append(change)
+    return changes
 
 
 @cache.cache_on_arguments()
 def list_checking_changes():
-    return _list_changes('check')
+    status = get_zuul_status()
+    pipe = [x for x in status['pipelines'] if x['name'] == 'check'].pop()
+    queue = [x for x in pipe['change_queues'] if PROJECT in x['name']].pop()
+
+    changes = []
+    for head in queue['heads']:
+        for change in head:
+            changes.append(change)
+    return changes
 
 
 @tasks.app.task
