@@ -122,7 +122,7 @@ def count_open_reviews():
         'AND label:verified+1',
         'AND (-label:code-review-1)',
         'AND (-label:code-review-2)',
-        'AND (-label:approved+1)']
+        'AND (-label:workflow+1)']
     count = len(query(' '.join(q)))
     backend.write(open_reviews=count)
     return count
@@ -139,7 +139,7 @@ def count_failed_merges():
         ')',
         'AND (label:verified-1 OR label:verified-2)',
         'AND label:code-review+2',
-        'AND label:approved+1']
+        'AND label:workflow+1']
     count = len(query(' '.join(q)))
     backend.write(failed_merges=count)
     return count
