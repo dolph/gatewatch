@@ -1,16 +1,12 @@
-Launchpad queries:
+Gatewatch
+---------
 
-- Days til next master milestone
-- Days til next stable milestone
-- Untriaged bugs
+Monitors Zuul, Gerrit and Launchpad to provide a heads up display of an
+OpenStack project.
 
-Gerrit queries:
+Raspberry Pi
+------------
 
-- Open reviews
-- Number of failed patches
-
-Zuul queries:
-
-- Gate queue duration
-- Gating changes
-- Number of sequentially successful / failed changes
+While the monitoring service is deployable to a server on the web with SSH
+access to Gerrit, a playbook is also included for bootstrapping a Raspberry Pi
+running Raspbian as an always-on monitoring display.
