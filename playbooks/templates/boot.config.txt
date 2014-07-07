@@ -1,0 +1,5 @@
+# rotate the display 270 degrees
+display_rotate=3
+
+# required for display rotation
+gpu_mem=32

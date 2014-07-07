@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=My Script
+Exec=chromium --kiosk --incognito http://gatewatch.dolphm.com/
+Icon=system-run
+X-GNOME-Autostart-enabled=true

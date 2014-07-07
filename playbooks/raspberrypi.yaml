@@ -1,0 +1,54 @@
+# this playbook bootstraps a raspberry pi for use as automated browser kiosk
+
+- hosts: all
+  user: pi
+  sudo: True
+  tasks:
+    - name: default to portrait orientated display
+      copy:
+        src=templates/boot.config.txt
+        dest=/boot/config.txt
+
+    - name: update apt cache
+      sudo: yes
+      apt:
+        update_cache=yes
+
+    - name: install packages
+      apt:
+        pkg={{ item }}
+      with_items:
+        - unclutter # hide the mouse cursor
+        - chromium # we need a browser with kiosk mode
+
+    - name: never let display go to sleep
+      copy:
+        src=templates/xinitrc
+        dest=/etc/X11/xinit/xinitrc
+        owner=root
+        group=root
+        mode=644
+
+- hosts: all
+  user: pi
+  tasks:
+    - name: create autostart configuration dir
+      file:
+        state=directory
+        path=~/.config/autostart
+        mode=0751
+
+    - name: start chrome in kiosk mode on login
+      copy:
+        src=templates/chrome_kiosk.desktop
+        dest=~/.config/autostart/chrome_kiosk.desktop
+
+- hosts: all
+  user: pi
+  sudo: True
+  tasks:
+    - name: restart raspberry pi
+      command: shutdown -r now "ansible playbook completing..."
+      async: 0
+      poll: 0
+      ignore_errors: true
