@@ -20,14 +20,7 @@
       with_items:
         - unclutter # hide the mouse cursor
         - chromium # we need a browser with kiosk mode
-
-    - name: never let display go to sleep
-      copy:
-        src=templates/xinitrc
-        dest=/etc/X11/xinit/xinitrc
-        owner=root
-        group=root
-        mode=644
+        - x11-xserver-utils # to disable screen blanking
 
 - hosts: all
   user: pi
