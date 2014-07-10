@@ -4,7 +4,12 @@ import celery
 
 from gatewatch import app
 
-PROJECTS = ['openstack/keystone', 'openstack/python-keystoneclient']
+PROJECTS = [
+    'openstack/keystone-specs',
+    'openstack/identity-api',
+    'openstack/keystone',
+    'openstack/python-keystoneclient',
+    'openstack/keystonemiddleware']
 PRIMARY_PROJECT = PROJECTS[0]
 
 # start dedicated celery beat worker with:

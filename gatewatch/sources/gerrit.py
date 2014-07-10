@@ -117,6 +117,8 @@ def count_open_reviews():
         'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/keystonemiddleware',
+        'OR project:openstack/keystone-specs',
         'OR project:openstack/identity-api',
         ')',
         'AND label:verified+1',
@@ -135,6 +137,8 @@ def count_failed_merges():
         'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/keystonemiddleware',
+        'OR project:openstack/keystone-specs',
         'OR project:openstack/identity-api',
         ')',
         'AND (label:verified-1 OR label:verified-2)',
@@ -152,6 +156,8 @@ def recently_merged():
         'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/keystonemiddleware',
+        'OR project:openstack/keystone-specs',
         'OR project:openstack/identity-api',
         ')']
     reviews = query(' '.join(q))
