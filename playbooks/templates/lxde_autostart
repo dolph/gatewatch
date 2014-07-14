@@ -1,0 +1,6 @@
+@lxpanel --profile LXDE
+@pcmanfm --desktop --profile LXDE
+@xset s off
+@xset -dpms
+@xset s noblank
+@chromium --kiosk --incognito http://gatewatch.dolphm.com/

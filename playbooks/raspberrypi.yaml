@@ -22,24 +22,14 @@
         - chromium # we need a browser with kiosk mode
         - x11-xserver-utils # to disable screen blanking
 
-- hosts: all
-  user: pi
-  tasks:
-    - name: create autostart configuration dir
-      file:
-        state=directory
-        path=~/.config/autostart
-        mode=0751
-
-    - name: start chrome in kiosk mode on login
+    - name: start chrome in kiosk mode on startup
       copy:
-        src=templates/chrome_kiosk.desktop
-        dest=~/.config/autostart/chrome_kiosk.desktop
+        src=templates/lxde_autostart
+        dest=/etc/xdg/lxsession/LXDE/autostart
+        owner=root
+        group=root
+        mode=0644
 
-- hosts: all
-  user: pi
-  sudo: True
-  tasks:
     - name: restart raspberry pi
       command: shutdown -r now "ansible playbook completing..."
       async: 0
