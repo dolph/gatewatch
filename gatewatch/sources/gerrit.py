@@ -122,7 +122,6 @@ def count_open_reviews():
         'OR project:openstack/identity-api',
         ')',
         'AND label:verified+1',
-        'AND (-label:code-review-1)',
         'AND (-label:code-review-2)',
         'AND (-label:workflow+1)']
     count = len(query(' '.join(q)))
@@ -141,7 +140,6 @@ def count_open_stable_reviews():
         'OR project:openstack/keystonemiddleware',
         ')',
         'AND label:verified+1',
-        'AND (-label:code-review-1)',
         'AND (-label:code-review-2)',
         'AND (-label:workflow+1)']
     count = len(query(' '.join(q)))
