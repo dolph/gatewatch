@@ -2,7 +2,6 @@
 {% block script %}
     <script type="application/javascript">
         var GRAPH_URL = "http://graphite.openstack.org/render/?from=-7days&width=940&height=80&margin=0&hideLegend=true&hideAxes=true&hideGrid=true&target=color(stats.gauges.zuul.pipeline.gate.current_changes,%20%27999999%27)&bgcolor=000000";
-        var PATCH_PASS_CHANCE_URL = "http://graphite.openstack.org/render/?from=-10seconds&format=json&target=alias(secondYAxis(lineWidth(asPercent(transformNull(multiplySeries(transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-neutron.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-neutron.{SUCCESS,FAILURE})),%2728hours%27),1),transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-full.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-full.{SUCCESS,FAILURE})),%2728hours%27),1),transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-grenade-dsvm.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-grenade-dsvm.{SUCCESS,FAILURE})),%2728hours%27),1),transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-neutron-large-ops.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-neutron-large-ops.{SUCCESS,FAILURE})),%2728hours%27),1),transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-large-ops.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-large-ops.{SUCCESS,FAILURE})),%2728hours%27),1),transformNull(movingAverage(divideSeries(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-postgres-full.SUCCESS,sum(stats.zuul.pipeline.gate.job.gate-tempest-dsvm-postgres-full.{SUCCESS,FAILURE})),%2728hours%27),1))),1),2)),%27Patch%20Pass%20Chance%20Moving%20Average%27)"
 
         // add a startswith function to all strings
         // http://stackoverflow.com/questions/646628
@@ -13,20 +12,6 @@
         }
 
         function loadData() {
-            $.getJSON(PATCH_PASS_CHANCE_URL,
-                function(data) {
-                    var avg = data.datapoints[0][0].toFixed();
-                    if (avg >= 80) {
-                        $('#merge_probability').html('<span class="text-success">' + avg + '%</span>');
-                    } else if (avg >= 30) {
-                        $('#merge_probability').html('<span class="text-warning">' + avg + '%</span>');
-                    } else {
-                        $('#merge_probability').html('<span class="text-error">' + avg + '%</span>');
-                    }
-                }
-            );
-            setTimeout("loadData()", 30 * 1000);
-
             $.getJSON("{{ url_for('data') }}",
                 function(data) {
                     $('#open_reviews').html(data.open_reviews);
@@ -40,6 +25,15 @@
                         $('#gate_duration').html('<span class="text-warning">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
                     } else {
                         $('#gate_duration').html('<span class="text-error">' + gate_duration[0] + ' <small>' + gate_duration[1] + '</small></span>');
+                    }
+
+                    var merge_probability = data.merge_probability;
+                    if (merge_probability >= 80) {
+                        $('#merge_probability').html('<span class="text-success">' + merge_probability + '%</span>');
+                    } else if (merge_probability >= 40) {
+                        $('#merge_probability').html('<span class="text-warning">' + merge_probability + '%</span>');
+                    } else {
+                        $('#merge_probability').html('<span class="text-error">' + merge_probability + '%</span>');
                     }
 
                     if (data.failed_merges) {
@@ -95,23 +89,29 @@
         </div>
     </div>
     <div class="row">
-        <div class="span3">
-            <h4>Open Reviews</h4>
-            <h1 id="open_reviews"></h1>
-        </div>
-        <div class="span3">
+        <div class="span4">
             <h4>Gate Queue</h4>
             <h1 id="gate_duration"></h1>
         </div>
-        <div class="span3">
+        <div class="span4">
             <h4>Merge Probability</h4>
             <h1 id="merge_probability"></h1>
         </div>
-        <div class="span3">
+        <div class="span4">
             <h4>Failed Merges</h4>
             <h1 id="failed_merges"></h1>
         </div>
-        <div class="span3">
+    </div>
+    </div>
+        <div class="span4">
+            <h4>Open Reviews</h4>
+            <h1 id="open_reviews"></h1>
+        </div>
+        <div class="span4">
+            <h4>Stable Reviews</h4>
+            <h1 id="stable_reviews" class="muted">0</h1>
+        </div>
+        <div class="span4">
             <h4>Next Milestone</h4>
             <h1 id="next_milestone"></h1>
         </div>
