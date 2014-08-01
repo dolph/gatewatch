@@ -66,6 +66,7 @@ def data():
     d = dict(
         merge_probability=backend.read('merge_probability', default=100),
         open_reviews=backend.read('open_reviews', default=0),
+        open_stable_reviews=backend.read('open_stable_reviews', default=0),
         gate_duration=utils.human_readable_duration(gate_duration),
         failed_merges=backend.read('failed_merges', default=0),
         next_milestone=utils.human_readable_duration(next_milestone),

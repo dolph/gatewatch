@@ -24,6 +24,10 @@ app.conf.update(
             'task': 'gatewatch.sources.gerrit.count_open_reviews',
             'schedule': datetime.timedelta(minutes=3),
         },
+        'count-open-stable-reviews': {
+            'task': 'gatewatch.sources.gerrit.count_open_stable_reviews',
+            'schedule': datetime.timedelta(minutes=3),
+        },
         'count-failed-merges': {
             'task': 'gatewatch.sources.gerrit.count_failed_merges',
             'schedule': datetime.timedelta(minutes=15),

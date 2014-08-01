@@ -15,6 +15,7 @@
             $.getJSON("{{ url_for('data') }}",
                 function(data) {
                     $('#open_reviews').html(data.open_reviews);
+                    $('#open_stable_reviews').html(data.open_stable_reviews);
 
                     var gate_duration = data.gate_duration;
                     if (gate_duration[0] == 0) {
@@ -109,7 +110,7 @@
         </div>
         <div class="span4">
             <h4>Stable Reviews</h4>
-            <h1 id="stable_reviews" class="muted">0</h1>
+            <h1 id="open_stable_reviews"></h1>
         </div>
         <div class="span4">
             <h4>Next Milestone</h4>

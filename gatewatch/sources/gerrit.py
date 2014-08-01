@@ -131,6 +131,25 @@ def count_open_reviews():
 
 
 @tasks.app.task
+def count_open_stable_reviews():
+    q = [
+        'status:open',
+        'AND -branch:master',
+        'AND (',
+        'project:openstack/keystone',
+        'OR project:openstack/python-keystoneclient',
+        'OR project:openstack/keystonemiddleware',
+        ')',
+        'AND label:verified+1',
+        'AND (-label:code-review-1)',
+        'AND (-label:code-review-2)',
+        'AND (-label:workflow+1)']
+    count = len(query(' '.join(q)))
+    backend.write(open_stable_reviews=count)
+    return count
+
+
+@tasks.app.task
 def count_failed_merges():
     q = [
         'status:open',
