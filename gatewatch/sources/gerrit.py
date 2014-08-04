@@ -133,7 +133,7 @@ def count_open_reviews():
 def count_open_stable_reviews():
     q = [
         'status:open',
-        'AND -branch:master',
+        'AND (-branch:master)',
         'AND (',
         'project:openstack/keystone',
         'OR project:openstack/python-keystoneclient',
