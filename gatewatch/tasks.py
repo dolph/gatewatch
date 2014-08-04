@@ -57,7 +57,7 @@ app.conf.update(
         },
         'merge-probability': {
             'task': 'gatewatch.sources.graphite.merge_probability',
-            'schedule': datetime.timedelta(seconds=10),
+            'schedule': datetime.timedelta(minutes=15),
         },
     },
     CELERY_IMPORTS=('gatewatch.sources'),
