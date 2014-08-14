@@ -112,10 +112,16 @@ def list_gating_changes_to_projects(projects):
 def list_checking_changes_to_projects(projects):
     """Returns the number of seconds required to approve a change."""
     changes = []
-    for change in list_checking_changes():
+    checking_changes = list_checking_changes()
+    max_remaining_time = max(c['remaining_time'] for c in checking_changes)
+
+    for change in checking_changes:
         # skip changes to other projects
         if change['project'] not in projects:
             continue
+
+        if change['remaining_time'] is None:
+            change['remaining_time'] = max_remaining_time
 
         # calculate the estimated time until a patch is merged
         eta = int(round(change['remaining_time'] / 1000.))
