@@ -9,7 +9,8 @@ PROJECTS = [
     'openstack/identity-api',
     'openstack/keystone',
     'openstack/python-keystoneclient',
-    'openstack/keystonemiddleware']
+    'openstack/keystonemiddleware',
+    'openstack/pycadf']
 PRIMARY_PROJECT = PROJECTS[0]
 
 # start dedicated celery beat worker with:
